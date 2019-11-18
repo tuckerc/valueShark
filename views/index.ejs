@@ -6,8 +6,13 @@
 <div id="searchResults">
   <!-- for each result render the data -->
 <ul id="renderedResult">
-  <li></li>
+    <% results.forEach(result => { %>
+    <li><%= result.symbol%></li>
+    <li><%= result.name%></li>
+    <li><%= result.price%></li>
+    <li><%= result.pe%></li>
+    <li><%= result.pb%></li>
 </ul>
+<% }) %>
 </div>
 
-<%- include('footer'); -%>
