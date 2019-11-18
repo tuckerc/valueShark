@@ -4,7 +4,8 @@
   "description": "SPA for value investors",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,7 @@
     "nodemon": "^1.19.4",
     "pg": "^7.12.1",
     "superagent": "^5.1.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": []
 }
