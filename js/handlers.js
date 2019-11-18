@@ -30,15 +30,15 @@ function renderHome(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 function searchSymbol(req, res) {
-  fetch("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=amzn", {
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-      "x-rapidapi-key": "59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030"
+  fetch('https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=amzn', {
+    'method': 'GET',
+    'headers': {
+      'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
+      'x-rapidapi-key': 'DATABASE_API'
     }
   })
-    .then(response => {
-      console.log(response.body);
+    .then(result => {
+      console.log(result.body);
     })
     .catch(err => {
       console.log(err);
