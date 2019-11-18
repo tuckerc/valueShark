@@ -30,7 +30,7 @@ function renderHome(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 function searchSymbol(req, res) {
-  fetch("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=amzn", {
+  fetch("data.json", {
     "method": "GET",
     "headers": {
       "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",

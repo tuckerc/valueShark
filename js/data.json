@@ -1,0 +1,87 @@
+{
+  "ResultSet": {
+    "Query": "nbe",
+    "Result": [
+      {
+        "symbol": "NBEV",
+        "name": "New Age Beverages Corporation",
+        "exch": "NMS",
+        "type": "S",
+        "exchDisp": "NASDAQ",
+        "typeDisp": "Equity"
+      },
+      {
+        "symbol": "NBEN.SW",
+        "name": "nebag ag",
+        "exch": "EBS",
+        "type": "S",
+        "exchDisp": "Swiss",
+        "typeDisp": "Equity"
+      },
+      {
+        "symbol": "NBEQUILIBRIO.BC",
+        "name": "NB Equilibrio RV EPSV",
+        "exch": "YHD",
+        "type": "M",
+        "exchDisp": "Industry",
+        "typeDisp": "Fund"
+      },
+      {
+        "symbol": "NBE.F",
+        "name": "ANGLO AFR.OIL+GAS LS -,05",
+        "exch": "FRA",
+        "type": "S",
+        "exchDisp": "Frankfurt",
+        "typeDisp": "Equity"
+      },
+      {
+        "symbol": "NBE.SG",
+        "name": "Anglo African Oil & Gas PLC Reg",
+        "exch": "STU",
+        "type": "S",
+        "exchDisp": "Stuttgart",
+        "typeDisp": "Equity"
+      },
+      {
+        "symbol": "NBEURODLAR80.BC",
+        "name": "NB Euro/Dólar 80 FI",
+        "exch": "YHD",
+        "type": "M",
+        "exchDisp": "Industry",
+        "typeDisp": "Fund"
+      },
+      {
+        "symbol": "NBEUROPA25FI.BC",
+        "name": "NB Europa 25",
+        "exch": "YHD",
+        "type": "M",
+        "exchDisp": "Industry",
+        "typeDisp": "Fund"
+      },
+      {
+        "symbol": "NBEUROPA50FI.BC",
+        "name": "NB Europa 50 FI",
+        "exch": "YHD",
+        "type": "M",
+        "exchDisp": "Industry",
+        "typeDisp": "Fund"
+      },
+      {
+        "symbol": "NBEUROPA70FI.BC",
+        "name": "NB Europa 70 FI",
+        "exch": "BAR",
+        "type": "M",
+        "exchDisp": "Barcelona",
+        "typeDisp": "Fund"
+      },
+      {
+        "symbol": "NBEV190111C00000500",
+        "name": "NBEV Jan 2019 call 0.500",
+        "exch": "OPR",
+        "type": "O",
+        "exchDisp": "OPR",
+        "typeDisp": "Option"
+      }
+    ]
+  }
+}
