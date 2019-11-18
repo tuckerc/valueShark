@@ -30,8 +30,8 @@ app.use( express.static( './public' ));
 app.set('view engine', 'ejs');
 
 app.get('/', handlers.renderHome);
-app.get('/search', handlers.searchSymbol);
-
+app.get('/search', handlers.newSearch);
+app.post('/search', handlers.searchSymbol);
 
 
 ////////////////////////////////////////////////
