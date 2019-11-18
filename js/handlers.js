@@ -22,8 +22,23 @@ function Symbol(data) {
 /////////////////////////////////////////////////
 // function to retreive data for home page
 /////////////////////////////////////////////////
-function renderHome(req, res) {
-  res.send('POL');
+async function renderHome(req, res) {
+  const index = ['MMM', 'AXP', 'AAPL', 'BA', 'CAT', 'CVX', 'CSCO', 'KO', 'DIS', 'DOW', 'XOM', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'MCD', 'MSFT', 'MRK', 'NKE', 'PFE', 'PG', 'TRV', 'UTX', 'UNH', 'VZ', 'V', 'WMT', 'WBA'];
+  const returnArr = [];
+  await index.forEach(ticker => {
+    console.log(ticker);
+    superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${String(ticker)}`)
+      .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
+      .set('x-rapidapi-key', process.env.RAPID_API_KEY)
+      .then( result => {
+        const symbol = new Symbol(result.body);
+        console.log(symbol);
+        returnArr.push(symbol);
+      })
+      .catch(err => console.log(err));
+  });
+  console.log(returnArr);
+  res.send(returnArr);
 }
 
 /////////////////////////////////////////////////
@@ -32,7 +47,7 @@ function renderHome(req, res) {
 function searchSymbol(req, res) {
   superagent.get('https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=exel')
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
-    .set('x-rapidapi-key', '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030')
+    .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
       res.send(symbol);
