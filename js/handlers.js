@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////
 // Dependencies
 /////////////////////////////////////////////////
-const fetch = require('node-fetch');
+const superagent = require('superagent');
 
 /////////////////////////////////////////////////
 // Constructors
@@ -13,8 +13,8 @@ function Symbol(data) {
   this.price = data.financialData.currentPrice;
   this.pe = data.summaryDetail.trailingPE;
   this.pb = data.defaultKeyStatistics.priceToBook;
-  this.peg = data.defaultKeyStatistics.pegRatio.fmt;
-  this.profitMargin = data.financialData.profitMargins.fmt;
+  this.peg = data.defaultKeyStatistics.pegRatio;
+  this.profitMargin = data.financialData.profitMargins;
   this.name = data.quoteType.shortName;
   this.marketCap = data.price.marketCap;
 }
@@ -30,18 +30,12 @@ function renderHome(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 function searchSymbol(req, res) {
-  fetch("data.json", {
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-      "x-rapidapi-key": "59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030"
-    }
-  })
-    .then(response => {
-      console.log(response.body);
-    })
-    .catch(err => {
-      console.log(err);
+  superagent.get('https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=exel')
+    .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
+    .set('x-rapidapi-key', '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030')
+    .then( result => {
+      const symbol = new Symbol(result.body);
+      res.send(symbol);
     });
 }
 
