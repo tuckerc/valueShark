@@ -31,12 +31,8 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-<<<<<<< HEAD
-    .then(result => {
-=======
     .then( result => {
 
->>>>>>> 899c6de2da67d90fd1971dcb78c5729a3ae55da7
       const symbol = new Symbol(result.body);
       console.log(symbol);
       res.render("index", symbol);
