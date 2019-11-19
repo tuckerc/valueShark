@@ -10,13 +10,13 @@ const superagent = require('superagent');
 /////////////////////////////////////////////////
 function Symbol(data) {
   this.symbol = data.symbol;
-  this.price = data.financialData.currentPrice;
-  this.pe = data.summaryDetail.trailingPE;
-  this.pb = data.defaultKeyStatistics.priceToBook;
-  this.peg = data.defaultKeyStatistics.pegRatio;
-  this.profitMargin = data.financialData.profitMargins;
+  this.price = data.financialData.currentPrice.fmt;
+  this.pe = data.summaryDetail.trailingPE.fmt;
+  this.pb = data.defaultKeyStatistics.priceToBook.fmt;
+  this.peg = data.defaultKeyStatistics.pegRatio.fmt;
+  this.profitMargin = data.financialData.profitMargins.fmt;
   this.name = data.quoteType.shortName;
-  this.marketCap = data.price.marketCap;
+  this.marketCap = data.price.marketCap.fmt;
 }
 
 /////////////////////////////////////////////////
@@ -39,6 +39,9 @@ async function renderHome(req, res) {
   });
   console.log(returnArr);
   res.send(returnArr);
+
+function newSearch(req, res) {
+  res.render('pages/detail-view');
 }
 
 /////////////////////////////////////////////////
@@ -50,9 +53,12 @@ function searchSymbol(req, res) {
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.send(symbol);
+      console.log(symbol);
+      res.render("index", symbol);
     });
 }
 
 exports.renderHome = renderHome;
+exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
+
