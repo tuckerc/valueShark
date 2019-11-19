@@ -29,61 +29,70 @@ function Company(data) {
   if(data.url) this.url = data.url;
 }
 
-function updateCompanyData() {
+async function updateCompanyData() {
   let returnArr = [];
   
-  let options = {
-    method: 'GET',
-    url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
-    qs: {Mic: 'XNAS'},
-    headers: {
-      'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-      'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
-      accept: 'json'
-    }
-  };
+  let firstQuery = new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
+      qs: {Mic: 'XNAS'},
+      headers: {
+        'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+        accept: 'json'
+      }
+    };
   
-  request(options, function (error, response, body) {
+    request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
-      });
-      resolve(returnArr);
-    });
-    reject('firstQuery failure');
-  })
+      }); 
+      resolve('first query success');
+      reject('Error in first Query');
+    })
+  });
 
-  let firstResult = firstQuery;
+  const firstResult = await firstQuery;
+  
+  firstResult;
 
   let secondQuery = new Promise((resolve, reject) => {
-    console.log(returnArr);
     returnArr.forEach(company => {
-      options = {
-        method: 'GET',
-        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-        qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
-        headers: {
-          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-          'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
-          accept: 'string'
-        }
-      };
-      
-      request(options, function (error, response, body) {
-        if (error) throw new Error(error);
-        let parsedBody = JSON.parse(body);
-        company.description = parsedBody.results.businessDescription.value;
-        company.industry = parsedBody.results.industry.value;
-        company.url = parsedBody.results.contact.url;
-      });
+      setTimeout(() => {
+        const options = {
+          method: 'GET',
+          url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
+          qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
+          headers: {
+            'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+            'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+            accept: 'string'
+          }
+        };
+        
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          const textBody = JSON.stringify(body);
+          let parsedBody = JSON.parse(textBody);
+          if(parsedBody.result) {
+            company.description = parsedBody.result.businessDescription.value;
+            company.industry = parsedBody.result.industry.value;
+            company.url = parsedBody.result.contact.url;
+          }
+        });
+      },10000);
     });
-    resolve(returnArr);
-    reject('secondQuery failure');
+    resolve('good second query');
+    reject('bad second query');
   });
-  
+
   let secondResult = await secondQuery;
-  console.log(returnArr);
+
+  secondResult;
+  return returnArr;
 }
 
 //////////////////////////////////////////////////

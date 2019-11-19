@@ -12,3 +12,10 @@ const handlers = require('../handlers.js');
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => handlers.errorHandler((err)));
+
+//////////////////////////////////////////////////
+// Function to add a company
+//////////////////////////////////////////////////
+function addCompany(data) {
+  
+}
