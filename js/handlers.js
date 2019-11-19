@@ -29,8 +29,10 @@ function Company(data) {
   if(data.url) this.url = data.url;
 }
 
-function newSearch(req, res) {
-  var options = {
+function updateCompanyData() {
+  let returnArr = [];
+  
+  let options = {
     method: 'GET',
     url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
     qs: {Mic: 'XNAS'},
@@ -42,15 +44,53 @@ function newSearch(req, res) {
   };
   
   request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-    let parsedBody = JSON.parse(body);
-    let returnArr = [];
-    parsedBody.results.forEach(company => {
-      returnArr.push(new Company(company));
-      console.log(returnArr);
+      if (error) throw new Error(error);
+      let parsedBody = JSON.parse(body);
+      parsedBody.results.forEach(company => {
+        returnArr.push(new Company(company));
+      });
+      resolve(returnArr);
     });
-    res.send(returnArr);
+    reject('firstQuery failure');
+  })
+
+  let firstResult = firstQuery;
+
+  let secondQuery = new Promise((resolve, reject) => {
+    console.log(returnArr);
+    returnArr.forEach(company => {
+      options = {
+        method: 'GET',
+        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
+        qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
+        headers: {
+          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+          'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+          accept: 'string'
+        }
+      };
+      
+      request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        let parsedBody = JSON.parse(body);
+        company.description = parsedBody.results.businessDescription.value;
+        company.industry = parsedBody.results.industry.value;
+        company.url = parsedBody.results.contact.url;
+      });
+    });
+    resolve(returnArr);
+    reject('secondQuery failure');
   });
+  
+  let secondResult = await secondQuery;
+  console.log(returnArr);
+}
+
+//////////////////////////////////////////////////
+// function to render home screen
+//////////////////////////////////////////////////
+function newSearch(req, res) {
+  res.render('pages/detail-view');
 }
 
 /////////////////////////////////////////////////
@@ -86,3 +126,4 @@ exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
+exports.updateCompanyData = updateCompanyData;
