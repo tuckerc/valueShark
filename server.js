@@ -14,7 +14,6 @@ const cors = require('cors');
 const handlers = require('./js/handlers.js');
 const pg = require('pg')
 
-
 ////////////////////////////////////////////////
 // Application Configuration
 ////////////////////////////////////////////////
@@ -30,9 +29,8 @@ const PORT = process.env.PORT || 3000;
 app.use( express.static( './public' ));
 app.set('view engine', 'ejs');
 
-app.get('/', handlers.renderHome);
-app.get('/search', handlers.searchSymbol);
-
+app.get('/', handlers.newSearch);
+app.post('/search', handlers.searchSymbol);
 
 
 ////////////////////////////////////////////////
