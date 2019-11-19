@@ -30,7 +30,7 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-    .then( result => {
+    .then(result => {
       const symbol = new Symbol(result.body);
       console.log(symbol);
       res.render("index", symbol);
@@ -38,5 +38,13 @@ function searchSymbol(req, res) {
     .catch(err => console.log(err));
 }
 
+//////////////////////////////////////////////////
+/////// ABOUT US FUNCTION
+//////////////////////////////////////////////////
+function information(req, res) {
+  res.render('pages/aboutus');
+}
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
+exports.information = information;
+
