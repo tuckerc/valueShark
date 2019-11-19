@@ -12,7 +12,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const handlers = require('./js/handlers.js');
-const superagent = require('superagent');
 
 ////////////////////////////////////////////////
 // Application Configuration
@@ -29,8 +28,7 @@ const PORT = process.env.PORT || 3000;
 app.use( express.static( './public' ));
 app.set('view engine', 'ejs');
 
-app.get('/', handlers.renderHome);
-app.get('/search', handlers.newSearch);
+app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
 
 
