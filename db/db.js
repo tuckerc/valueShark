@@ -17,5 +17,5 @@ client.on('error', err => handlers.errorHandler((err)));
 // Function to add a company
 //////////////////////////////////////////////////
 function addCompany(data) {
-  
+  let sql = 'insert into companies () values '
 }

@@ -1,4 +1,4 @@
-'use strice';
+'use strict';
 
 //////////////////////////////////////////////////
 // Configs
@@ -12,6 +12,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const handlers = require('./js/handlers.js');
+// const pg = require('pg')
 
 ////////////////////////////////////////////////
 // Application Configuration
@@ -25,13 +26,12 @@ const PORT = process.env.PORT || 3000;
 ////////////////////////////////////////////////
 // Routes
 ////////////////////////////////////////////////
-app.use( express.static( './public' ));
+app.use(express.static('./public'));
 app.set('view engine', 'ejs');
 
 app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
-app.use('*', handlers.notFoundHandler);
-app.use(handlers.errorHandler);
+app.get('/about', handlers.information);
 
 
 ////////////////////////////////////////////////
