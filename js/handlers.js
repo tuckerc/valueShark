@@ -11,7 +11,7 @@ const request = require('request');
 /////////////////////////////////////////////////
 function Symbol(data) {
   this.symbol = data.symbol;
-  this.price = data.financialData.currentPrice.fmt;
+  this.price = data.financialData.currentPrice;
   this.pe = data.summaryDetail.trailingPE.fmt;
   this.pb = data.defaultKeyStatistics.priceToBook.fmt;
   this.peg = data.defaultKeyStatistics.pegRatio.fmt;
@@ -97,10 +97,12 @@ function newSearch(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 function searchSymbol(req, res) {
+
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
+
       const symbol = new Symbol(result.body);
       res.render('index', symbol);
     })
