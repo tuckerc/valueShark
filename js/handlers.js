@@ -19,12 +19,6 @@ function Symbol(data) {
   this.marketCap = data.price.marketCap.fmt;
 }
 
-/////////////////////////////////////////////////
-// function to retreive data for home page
-/////////////////////////////////////////////////
-function renderHome(req, res) {
-  res.send('This is the home route');
-}
 function newSearch(req, res) {
   res.render('pages/detail-view');
 }
@@ -33,20 +27,18 @@ function newSearch(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 function searchSymbol(req, res) {
-  const url = `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`;
-  superagent
-    .get(url)
-    .set("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
-    .set("x-rapidapi-key", "19f42967d0msh624bfc050b8998ep18fc02jsn49250de683c9")
-    .then(result => {
-      // console.log(result)
+
+  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
+    .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
+    .set('x-rapidapi-key', process.env.RAPID_API_KEY)
+    .then( result => {
+
       const symbol = new Symbol(result.body);
       console.log(symbol);
       res.render("index", symbol);
-    });
+    })
+    .catch(err => console.log(err));
 }
 
-exports.renderHome = renderHome;
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
-
