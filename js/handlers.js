@@ -10,7 +10,7 @@ const superagent = require('superagent');
 /////////////////////////////////////////////////
 function Symbol(data) {
   this.symbol = data.symbol;
-  this.price = data.financialData.currentPrice.fmt;
+  this.price = data.financialData.currentPrice;
   this.pe = data.summaryDetail.trailingPE.fmt;
   this.pb = data.defaultKeyStatistics.priceToBook.fmt;
   this.peg = data.defaultKeyStatistics.pegRatio.fmt;
@@ -37,7 +37,7 @@ function searchSymbol(req, res) {
   superagent
     .get(url)
     .set("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
-    .set("x-rapidapi-key", "59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030")
+    .set("x-rapidapi-key", "19f42967d0msh624bfc050b8998ep18fc02jsn49250de683c9")
     .then(result => {
       // console.log(result)
       const symbol = new Symbol(result.body);
