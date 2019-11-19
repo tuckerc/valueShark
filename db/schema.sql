@@ -13,7 +13,8 @@ CREATE TABLE portfolios (
   id serial primary key,
   shares FLOAT,
   av_cost FLOAT,
-  user_id int
+  user_id int,
+  company_id int
 );
 
 CREATE TABLE companies (

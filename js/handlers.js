@@ -4,6 +4,7 @@
 // Dependencies
 /////////////////////////////////////////////////
 const superagent = require('superagent');
+const request = require('request');
 
 /////////////////////////////////////////////////
 // Constructors
@@ -19,8 +20,37 @@ function Symbol(data) {
   this.marketCap = data.price.marketCap.fmt;
 }
 
+function Company(data) {
+  if(data.id) this.id = data.id;
+  this.name = data.companyName;
+  this.ticker = data.ticker;
+  if(data.description) this.description = data.description;
+  if(data.industry) this.industry = data.industry;
+  if(data.url) this.url = data.url;
+}
+
 function newSearch(req, res) {
-  res.render('pages/detail-view');
+  var options = {
+    method: 'GET',
+    url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
+    qs: {Mic: 'XNAS'},
+    headers: {
+      'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+      'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+      accept: 'json'
+    }
+  };
+  
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+    let parsedBody = JSON.parse(body);
+    let returnArr = [];
+    parsedBody.results.forEach(company => {
+      returnArr.push(new Company(company));
+      console.log(returnArr);
+    });
+    res.send(returnArr);
+  });
 }
 
 /////////////////////////////////////////////////
@@ -32,11 +62,27 @@ function searchSymbol(req, res) {
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
-      console.log(symbol);
-      res.render("index", symbol);
+      res.render('index', symbol);
     })
-    .catch(err => console.log(err));
+    .catch(err => errorHandler(err, req, res));
+}
+
+/////////////////////////////////////////////////////////////////////////
+/// not found handler
+/////////////////////////////////////////////////////////////////////////
+function notFoundHandler(request,response) {
+  response.status(404).send('Hmmm... Something went wrong. We couldn\'t find what you are looking for.');
+}
+
+/////////////////////////////////////////////////////////////////////////
+/// error handler
+/////////////////////////////////////////////////////////////////////////
+function errorHandler(err, req, res) {
+  console.log(err);
+  res.status(500).send(err);
 }
 
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
+exports.notFoundHandler = notFoundHandler;
+exports.errorHandler = errorHandler;
