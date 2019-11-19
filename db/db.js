@@ -1,3 +1,14 @@
 'use strict';
 
+///////////////////////////////////////////
+// Dependencies
+///////////////////////////////////////////
 const pg = require('pg');
+const handlers = require('../handlers.js');
+
+//////////////////////////////////////////////////
+// Database Setup
+//////////////////////////////////////////////////
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('error', err => handlers.errorHandler((err)));
