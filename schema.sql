@@ -1,20 +1,18 @@
 -- TABLE FOR USERS AND PORTFOLIO
+-- 
 
-DROP TABLE IF EXISTS  users;
+DROP TABLE IF EXISTS  users,portfolios;
 
 CREATE TABLE users (
     name VARCHAR,
     id VARCHAR(255),
-    portfolio_id INT,
+    portfolio_id INT
 
 )
-
-DROP TABLE IF EXISTS portfolio;
-
-CREATE TABLE portfolio (
+CREATE TABLE portfolios (
     id VARCHAR(255),
     shares FLOAT,
-    av_cost FLOAT,
+    av_cost FLOAT
 
 )
 

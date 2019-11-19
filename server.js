@@ -12,6 +12,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const handlers = require('./js/handlers.js');
+const pg = require('pg')
 
 
 ////////////////////////////////////////////////
