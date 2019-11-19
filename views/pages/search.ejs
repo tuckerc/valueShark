@@ -14,6 +14,9 @@
       <li><span>Market Cap: </span><%= marketCap %></li>
       <li><span>PB: </span><%= pb %></li>
     </ul>
-    
+    <form id="add-profile" action="/portfolio" method="POST">
+        <button type="submit">Add to Portfolio</button>
+      </form>
 </div>
+
 <%- include('../partials/footer'); -%>

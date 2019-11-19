@@ -20,7 +20,7 @@ function Symbol(data) {
 }
 
 function newSearch(req, res) {
-  res.render('pages/detail-view');
+  res.render('pages/search');
 }
 
 /////////////////////////////////////////////////

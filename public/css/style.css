@@ -1,4 +1,5 @@
 body {
+  width: 960px;
   display: flex;
   flex-flow: row wrap;
   width: 100%;
@@ -7,43 +8,59 @@ body {
 
 }
   /* searchbar/logo*/
-#newSearch {
+#header {
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-end;
+    justify-content: center;
     background-color: rgb(6, 34, 247);
     text-align: center;
     height: 100px;
+    width: 100%;
+  }
+  img { 
+    height: 100px;
+    width: auto;
+  }
+
+  #newSearch {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    background-color: rgb(6, 247, 66);
+    text-align: center;
+    height: 30px;
     width: 100%;
   }
   /* portfolio sidebar */
   .portfolio-item {
       background-color: rgb(85, 223, 212);
       display: flex;
-      text-align: center;
-      height: 300px;
-      width: 33%;
-      border-top: 0px;
-      border-left: 0px;
+      align-items: flex-start;
+      height: 100px;
+      width: auto;
+      padding: 1em;
     }
   /* search view/table data */
-  
   #renderedResult {
     background-color: rgb(250, 248, 116);
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
     display: flex;
-    height: 300px;
-    width: 67%;
-    text-align: center;
+    height: 100%;
+    width: 100%;
     border-top: 0px;
+    padding: 1em;
   }
   .footer {
     background-color: rgb(138, 85, 223);
     display: flex;
-    flex-flow: row;
+    flex-direction: row;
     height: 100px;
     width: 100%;
-    text-align: center;
     border-top: 0px;
+    align-items: center;
+    justify-content: center;
   }
   button{
     width: 100px;
@@ -54,7 +71,5 @@ body {
     float: left;
     color: white;
     padding-left: 45px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
   }
