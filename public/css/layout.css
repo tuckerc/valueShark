@@ -1,0 +1,29 @@
+#searchResults {
+    display: flex;  
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  #searchResults > * {
+    padding: 10px;
+    flex: 1 100%;
+  }
+  
+  #newSearch{
+    background: tomato;
+  }
+  
+  #footer {
+    background: lightgreen;
+  }
+  
+  #renderResults{
+    text-align: left;
+    background: deepskyblue;
+  }
+  
+  #portfolio{
+    background: gold;
+  }
+  
