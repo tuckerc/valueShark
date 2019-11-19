@@ -1,6 +1,7 @@
 body {
   display: flex;
   flex-flow: row wrap;
+  width: 100%;
   background-color: white;
   font-family: Arial, Helvetica, sans-serif;
 
@@ -12,14 +13,13 @@ body {
     justify-content: flex-end;
     background-color: rgb(6, 34, 247);
     text-align: center;
-    height: 50px;
+    height: 100px;
     width: 100%;
   }
   /* portfolio sidebar */
-  #portfolio-bar {
+  .portfolio-item {
       background-color: rgb(85, 223, 212);
       display: flex;
-      flex-flow: left;
       text-align: center;
       height: 300px;
       width: 33%;
@@ -31,7 +31,6 @@ body {
   #renderedResult {
     background-color: rgb(250, 248, 116);
     display: flex;
-    flex-flow: right;
     height: 300px;
     width: 67%;
     text-align: center;
