@@ -1,10 +1,8 @@
 <%- include('../partials/header'); -%>
 
-<%- include('../partials/searchbar'); -%>
-
 <div id="searchResults">
   <!-- for each result render the data -->
-  
+  <%- include('../partials/searchbar'); -%>
     <ul id="renderedResult">
       <li><span>Name: </span><%= name %></li>
       <li><span>Symbol: </span><%= symbol %></li>
