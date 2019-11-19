@@ -1,12 +1,11 @@
 <%- include('partials/header'); -%>
-
+<%- include('partials/portfolio'); -%>
 <%- include('partials/searchbar'); -%>
 <h1>This is the homepage</h1>
 <div id="searchResults">
-  <!-- for each result render the data -->
-  
+  <!-- for each result render the data --> 
     <ul id="renderedResult">
-      <li><span>Name: </span><%= name %></li>
+      <li><%= name %></li>
       <li><span>Symbol: </span><%= symbol %></li>
       <li><span>Price: </span><%= price %></li>
       <li><span>P/E: </span><%= pe %></li>
@@ -15,7 +14,6 @@
       <li><span>Market Cap: </span><%= marketCap %></li>
       <li><span>PB: </span><%= pb %></li>
     </ul>
-    
 </div>
 
 <%- include('partials/footer'); -%>
