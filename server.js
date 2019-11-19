@@ -30,6 +30,8 @@ app.set('view engine', 'ejs');
 
 app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
+app.use('*', handlers.notFoundHandler);
+app.use(handlers.errorHandler);
 
 
 ////////////////////////////////////////////////
@@ -38,3 +40,5 @@ app.post('/search', handlers.searchSymbol);
 app.listen(PORT, () => {
   console.log(`listening on http://localhost:${PORT}`);
 });
+
+handlers.updateCompanyData();
