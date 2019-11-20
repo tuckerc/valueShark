@@ -21,69 +21,78 @@ function Symbol(data) {
 }
 
 function Company(data) {
-  if(data.id) this.id = data.id;
+  if (data.id) this.id = data.id;
   this.name = data.companyName;
   this.ticker = data.ticker;
-  if(data.description) this.description = data.description;
-  if(data.industry) this.industry = data.industry;
-  if(data.url) this.url = data.url;
+  if (data.description) this.description = data.description;
+  if (data.industry) this.industry = data.industry;
+  if (data.url) this.url = data.url;
 }
 
-function updateCompanyData() {
+async function updateCompanyData() {
   let returnArr = [];
-  
-  let options = {
-    method: 'GET',
-    url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
-    qs: {Mic: 'XNAS'},
-    headers: {
-      'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-      'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
-      accept: 'json'
-    }
-  };
-  
-  request(options, function (error, response, body) {
+
+  let firstQuery = new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
+      qs: { Mic: 'XNAS' },
+      headers: {
+        'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+        accept: 'json'
+      }
+    };
+
+    request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
       });
-      resolve(returnArr);
-    });
-    reject('firstQuery failure');
-  })
+      resolve('first query success');
+      reject('Error in first Query');
+    })
+  });
 
-  let firstResult = firstQuery;
+  const firstResult = await firstQuery;
+
+  firstResult;
 
   let secondQuery = new Promise((resolve, reject) => {
-    console.log(returnArr);
     returnArr.forEach(company => {
-      options = {
-        method: 'GET',
-        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-        qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
-        headers: {
-          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-          'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
-          accept: 'string'
-        }
-      };
-      
-      request(options, function (error, response, body) {
-        if (error) throw new Error(error);
-        let parsedBody = JSON.parse(body);
-        company.description = parsedBody.results.businessDescription.value;
-        company.industry = parsedBody.results.industry.value;
-        company.url = parsedBody.results.contact.url;
-      });
+      setTimeout(() => {
+        const options = {
+          method: 'GET',
+          url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
+          qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
+          headers: {
+            'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+            'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+            accept: 'string'
+          }
+        };
+
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          const textBody = JSON.stringify(body);
+          let parsedBody = JSON.parse(textBody);
+          if (parsedBody.result) {
+            company.description = parsedBody.result.businessDescription.value;
+            company.industry = parsedBody.result.industry.value;
+            company.url = parsedBody.result.contact.url;
+          }
+        });
+      }, 10000);
     });
-    resolve(returnArr);
-    reject('secondQuery failure');
+    resolve('good second query');
+    reject('bad second query');
   });
-  
+
   let secondResult = await secondQuery;
-  console.log(returnArr);
+
+  secondResult;
+  return returnArr;
 }
 
 //////////////////////////////////////////////////
@@ -101,7 +110,7 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-    .then( result => {
+    .then(result => {
 
       const symbol = new Symbol(result.body);
       res.render('index', symbol);
@@ -112,7 +121,7 @@ function searchSymbol(req, res) {
 /////////////////////////////////////////////////////////////////////////
 /// not found handler
 /////////////////////////////////////////////////////////////////////////
-function notFoundHandler(request,response) {
+function notFoundHandler(request, response) {
   response.status(404).send('Hmmm... Something went wrong. We couldn\'t find what you are looking for.');
 }
 
@@ -124,19 +133,18 @@ function errorHandler(err, req, res) {
   res.status(500).send(err);
 }
 
-//////////////////////////////////////////////////
-/////// ABOUT US FUNCTION
-//////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////
+////ABOUT US
+////////////////////////////////////////////////////////////////////////////
+
 function information(req, res) {
   res.render('pages/aboutus');
 }
+
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
-<<<<<<< HEAD
 exports.information = information;
-
-=======
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
->>>>>>> 864f26dc65af94fe654f60fa72547f68c33a4f2e
