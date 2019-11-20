@@ -1,10 +1,12 @@
-<%- include('../partials/header'); -%>
+<%- include('../partials/head'); -%>
 
 <div id="searchResults">
   <!-- for each result render the data -->
   <%- include('../partials/portfolio'); -%>
+  <%- include('../partials/header'); -%>
   <%- include('../partials/searchbar'); -%>
   <ul id="renderedResult">
+    <li><span>Name: </span><%= name %></li>
     <li><span>Symbol: </span><%= symbol %></li>
     <li><span>Price: </span><%= price %></li>
     <li><span>P/E: </span><%= pe %></li>

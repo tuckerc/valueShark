@@ -12,8 +12,8 @@ body {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    background-color: rgb(6, 34, 247);
-    text-align: center;
+    background-color: rgb(10,9,111)
+;    text-align: center;
     height: 100px;
     width: 100%;
   }
@@ -70,6 +70,18 @@ body {
     font-size: 10pt;
     float: left;
     color: white;
+    padding-left: 45px;
+    border-radius: 5px;
+  }
+
+  .linkedin{
+    width: 50x;
+    height: 20x;
+    background: whitesmoke;
+    border: solid gray 1px;
+    font-size: 10pt;
+    float: left;
+    color: black;
     padding-left: 45px;
     border-radius: 5px;
   }
