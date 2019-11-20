@@ -64,35 +64,39 @@ async function updateCompanyData() {
   firstResult;
 
   let secondQuery = new Promise((resolve, reject) => {
-    returnArr.forEach(company => {
-      setTimeout(() => {
-        const options = {
-          method: 'GET',
-          url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-          qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
-          headers: {
-            'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-            'x-rapidapi-key': process.env.RAPID_API_KEY,
-            accept: 'string'
-          }
-        };
-
-        request(options, function (error, response, body) {
-          if (error) throw new Error(error);
-          const textBody = JSON.stringify(body);
+    returnArr.forEach((company, idx) => {
+      const options = {
+        method: 'GET',
+        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
+        qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
+        headers: {
+          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+          'x-rapidapi-key': process.env.RAPID_API_KEY,
+          accept: 'string'
+        }
+      };
+      
+      setTimeout(request, 1000 * idx, options, (error, response, body) => {
+        if (error) throw new Error(error);
+        // const textBody = JSON.stringify(body);
+        console.log(company.name + ': ' + body);
+        const bodyCheck = body.substring(0,9);
+        if(bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
-          // if parsedBoyd.status
-          company.description = parsedBody.result.businessDescription.value;
-          company.industry = parsedBody.result.industry.value;
-          company.url = parsedBody.result.contact.url;  
-          db.addCompany(company);
-          // console.log(parsedBody);
-          // if(parsedBody.charAt(0) !== '<') {
+          if(parsedBody.result) {
+            company.description = parsedBody.result.businessDescription.value;
+            company.industry = parsedBody.result.industry.value;
+            company.url = parsedBody.result.contact.url;
+          }
+        }
+          
+        db.addCompany(company);
+        // console.log(parsedBody);
+        // if(parsedBody.charAt(0) !== '<') {
 
-          // }
+        // }
 
-        });
-      },20000);
+      });
     });
     resolve('good second query');
     reject('bad second query');
@@ -101,7 +105,16 @@ async function updateCompanyData() {
   let secondResult = await secondQuery;
 
   secondResult;
-  return returnArr;
+
+  let success = new Promise((resolve, reject) => {
+    console.log(`companies table updated: ${Math.floor(Date.now() / 1000)}`);
+    resolve('success');
+    reject('failure');
+  });
+
+  let lastResult = await success;
+
+  lastResult;
 }
 
 //////////////////////////////////////////////////
