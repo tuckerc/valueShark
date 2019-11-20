@@ -23,7 +23,8 @@ function Symbol(data) {
 
 function Company(data) {
   if (data.id) this.id = data.id;
-  this.name = data.companyName;
+  if(data.companyName) this.name = data.companyName;
+  else if(data.name) this.name = data.name;
   this.ticker = data.ticker;
   if (data.description) this.description = data.description;
   if (data.industry) this.industry = data.industry;
@@ -89,13 +90,7 @@ async function updateCompanyData() {
             company.url = parsedBody.result.contact.url;
           }
         }
-          
         db.addCompany(company);
-        // console.log(parsedBody);
-        // if(parsedBody.charAt(0) !== '<') {
-
-        // }
-
       });
     });
     resolve('good second query');
@@ -118,6 +113,50 @@ async function updateCompanyData() {
 }
 
 //////////////////////////////////////////////////
+// Function to get financial data for each company
+//////////////////////////////////////////////////
+async function _getCoFinData(ticker) {
+  const dataPull = new Promise((resolve, reject) => {
+    superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
+    .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
+    .set('x-rapidapi-key', process.env.RAPID_API_KEY)
+    .then( result => {
+      return result.body;
+    })
+    .catch(err => errorHandler(err, req, res));
+    resolve('company financial data updated');
+    reject('company financial data not updated');
+  });
+
+  const dataPullResult = await dataPull;
+
+  dataPullResult;
+}
+
+//////////////////////////////////////////////////
+// function to update the financial data
+// for every company in the database
+//////////////////////////////////////////////////
+async function updateCoFinData() {
+  let tempArr = [];
+  let getTickers = db.getCompanies()
+    .then(result => {
+      result.rows.forEach(company => {
+        tempArr.push(new Company(company));
+      })
+    })
+    .catch(err => console.log(err));
+
+  let tickersResults = await getTickers;
+
+  tickersResults;
+
+  
+  
+  console.log(tempArr);
+}
+
+//////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
 function newSearch(req, res) {
@@ -132,7 +171,6 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-
     .then( result => {
       const symbol = new Symbol(result.body);
       res.render('index', symbol);
@@ -170,3 +208,4 @@ exports.information = information;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
+exports.updateCoFinData = updateCoFinData;

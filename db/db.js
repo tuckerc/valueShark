@@ -22,4 +22,13 @@ function addCompany(data) {
   return client.query(sql, values);
 }
 
+//////////////////////////////////////////////////
+// Function to retreive company
+//////////////////////////////////////////////////
+function getCompanies() {
+  let sql = 'select * from companies';
+  return client.query(sql);
+}
+
 exports.addCompany = addCompany;
+exports.getCompanies = getCompanies;
