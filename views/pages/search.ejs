@@ -1,23 +1,24 @@
 <%- include('../partials/head'); -%>
-
-<div id="searchResults">
-  <!-- for each result render the data -->
-  <%- include('../partials/portfolio'); -%>
-  <%- include('../partials/header'); -%>
-  <%- include('../partials/searchbar'); -%>
-  <ul id="renderedResult">
-    <li><span>Name: </span><%= name %></li>
-    <li><span>Symbol: </span><%= symbol %></li>
-    <li><span>Price: </span><%= price %></li>
-    <li><span>P/E: </span><%= pe %></li>
-    <li><span>PEG: </span><%= peg %></li>
-    <li><span>Profit Margin: </span><%= profitMargin %></li>
-    <li><span>Market Cap: </span><%= marketCap %></li>
-    <li><span>PB: </span><%= pb %></li>
-  </ul>
-    <form id="add-profile" action="/portfolio" method="POST">
-        <button type="submit">Add to Portfolio</button>
-      </form>
+<!-- for each result render the data -->
+<%- include('../partials/header'); -%>
+<%- include('../partials/searchbar'); -%>
+<div class="main"> 
+  <div id="searchResults">
+    <ul>
+      <li><span>Name: </span><%= name %></li>
+      <li><span>Symbol: </span><%= symbol %></li>
+      <li><span>Price: </span><%= price %></li>
+      <li><span>P/E: </span><%= pe %></li>
+      <li><span>PEG: </span><%= peg %></li>
+      <li><span>Profit Margin: </span><%= profitMargin %></li>
+      <li><span>Market Cap: </span><%= marketCap %></li>
+      <li><span>PB: </span><%= pb %></li>
+    </ul>
+      <form id="add-profile" action="/portfolio" method="POST">
+          <button type="submit">Add to Portfolio</button>
+        </form>
+  </div>
 </div>
+<%- include('../partials/portfolio'); -%>
 
 <%- include('../partials/footer'); -%>
