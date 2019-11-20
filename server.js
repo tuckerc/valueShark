@@ -47,3 +47,4 @@ app.listen(PORT, () => {
 
 // update company data every month on the first day at midnight
 schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
+handlers.updateCompanyData()

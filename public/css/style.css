@@ -12,11 +12,20 @@ body {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    background-color: rgb(10,9,111)
-;    text-align: center;
+    background-color: rgb(10,9,111);
+    text-align: center;
     height: 100px;
     width: 100%;
+    color: honeydew;
+    font-size: 20;
   }
+  #about{
+    display: flex;
+    color: honeydew;
+    font-size: 20;
+    justify-self:  right;
+  }
+
   img { 
     height: 100px;
     width: auto;

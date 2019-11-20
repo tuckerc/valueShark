@@ -51,6 +51,7 @@ async function updateCompanyData() {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
+      console.log(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
       });
