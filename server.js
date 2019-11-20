@@ -31,8 +31,7 @@ app.set('view engine', 'ejs');
 
 app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
-app.get('/about', handlers.information);
-
+// app.get('/about', handlers.information);
 
 ////////////////////////////////////////////////
 // Initiation
