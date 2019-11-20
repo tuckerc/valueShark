@@ -80,13 +80,11 @@ async function updateCompanyData() {
         request(options, function (error, response, body) {
           if (error) throw new Error(error);
           const textBody = JSON.stringify(body);
-          let parsedBody = JSON.parse(textBody);
+          let parsedBody = JSON.parse(body);
           // if parsedBoyd.status
-          if(parsedBody.result) {
-            company.description = parsedBody.result.businessDescription.value;
-            company.industry = parsedBody.result.industry.value;
-            company.url = parsedBody.result.contact.url;  
-          }
+          company.description = parsedBody.result.businessDescription.value;
+          company.industry = parsedBody.result.industry.value;
+          company.url = parsedBody.result.contact.url;  
           db.addCompany(company);
           // console.log(parsedBody);
           // if(parsedBody.charAt(0) !== '<') {
@@ -94,7 +92,7 @@ async function updateCompanyData() {
           // }
 
         });
-      },100000);
+      },20000);
     });
     resolve('good second query');
     reject('bad second query');
