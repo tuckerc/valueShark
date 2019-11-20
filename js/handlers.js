@@ -30,23 +30,29 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
-function User(data) {
-  this.name = data.userName;
+function User(name) {
+  // console.log(name)
+  this.name = name;
 }
 
 
 //////////////////////////////////////////////////////////
 ///////ADDING A FUNCTION  FOR PORTFOLIO
 //////////////////////////////////////////////////////////
-  
-function usersHandler(req,res) {
+
+function usersHandler(req, res) {
   let names = req.body.userfield;
-  db.addUser(new User(names));
-  
+  const newUser = new User(names);
+  console.log(newUser)
+  // console.log(newUser)
+  // console.log(db.addUser(new User(names)));
+
+  res.redirect('/');
+
   // res.send(client.query(SQL,values)
   // .then(console.log(values))
   // .catch(err => handleError(err, res)));
-  }
+}
 
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
@@ -93,21 +99,21 @@ async function updateCompanyData() {
           accept: 'string'
         }
       };
-      
+
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
         console.log(company.name + ': ' + body);
-        const bodyCheck = body.substring(0,9);
-        if(bodyCheck === '{"result"') {
+        const bodyCheck = body.substring(0, 9);
+        if (bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
-          if(parsedBody.result) {
+          if (parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
         }
-          
+
         db.addCompany(company);
         // console.log(parsedBody);
         // if(parsedBody.charAt(0) !== '<') {
@@ -151,7 +157,7 @@ function searchSymbol(req, res) {
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
 
-    .then( result => {
+    .then(result => {
       const symbol = new Symbol(result.body);
       res.render('index', symbol);
     })

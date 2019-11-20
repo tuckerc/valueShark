@@ -27,9 +27,11 @@ function addCompany(data) {
 ////ADD USERS
 ///////////////////////////////////////////////
 function addUser(data) {
-  let sql = 'INSERT INTO users data VALUES ($1);';
-  let values = data.userName;
+  let sql = 'INSERT INTO users (name) VALUES ($1) returning *';
+  let values = [data];
   return client.query(sql,values)
+
+
 }
 
 
