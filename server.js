@@ -11,6 +11,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const schedule = require('node-schedule');
 const handlers = require('./js/handlers.js');
 // const pg = require('pg')
 
@@ -44,4 +45,5 @@ app.listen(PORT, () => {
   console.log(`listening on http://localhost:${PORT}`);
 });
 
-handlers.updateCompanyData();
+// update company data every month on the first day at midnight
+schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
