@@ -39,7 +39,7 @@ async function updateCompanyData() {
       qs: {Mic: 'XNAS'},
       headers: {
         'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+        'x-rapidapi-key': process.env.RAPID_API_KEY,
         accept: 'json'
       }
     };
@@ -68,7 +68,7 @@ async function updateCompanyData() {
           qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
           headers: {
             'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-            'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+            'x-rapidapi-key': process.env.RAPID_API_KEY,
             accept: 'string'
           }
         };
