@@ -20,11 +20,86 @@ function Symbol(data) {
   this.marketCap = data.price.marketCap.fmt;
 }
 
+function Company(data) {
+  if(data.id) this.id = data.id;
+  this.name = data.companyName;
+  this.ticker = data.ticker;
+  if(data.description) this.description = data.description;
+  if(data.industry) this.industry = data.industry;
+  if(data.url) this.url = data.url;
+}
+
+async function updateCompanyData() {
+  let returnArr = [];
+  
+  let firstQuery = new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
+      qs: {Mic: 'XNAS'},
+      headers: {
+        'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+        accept: 'json'
+      }
+    };
+  
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      let parsedBody = JSON.parse(body);
+      parsedBody.results.forEach(company => {
+        returnArr.push(new Company(company));
+      }); 
+      resolve('first query success');
+      reject('Error in first Query');
+    })
+  });
+
+  const firstResult = await firstQuery;
+  
+  firstResult;
+
+  let secondQuery = new Promise((resolve, reject) => {
+    returnArr.forEach(company => {
+      setTimeout(() => {
+        const options = {
+          method: 'GET',
+          url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
+          qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
+          headers: {
+            'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
+            'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+            accept: 'string'
+          }
+        };
+        
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          const textBody = JSON.stringify(body);
+          let parsedBody = JSON.parse(textBody);
+          if(parsedBody.result) {
+            company.description = parsedBody.result.businessDescription.value;
+            company.industry = parsedBody.result.industry.value;
+            company.url = parsedBody.result.contact.url;
+          }
+        });
+      },10000);
+    });
+    resolve('good second query');
+    reject('bad second query');
+  });
+
+  let secondResult = await secondQuery;
+
+  secondResult;
+  return returnArr;
+}
+
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
 function newSearch(req, res) {
-  res.render('pages/search');
+  res.render('pages/detail-view');
 }
 
 /////////////////////////////////////////////////
