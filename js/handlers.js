@@ -30,6 +30,24 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
+function User(data) {
+  this.name = data.userName;
+}
+
+
+//////////////////////////////////////////////////////////
+///////ADDING A FUNCTION  FOR PORTFOLIO
+//////////////////////////////////////////////////////////
+  
+function usersHandler(req,res) {
+  let names = req.body.userfield;
+  db.addUser(new User(names));
+  
+  // res.send(client.query(SQL,values)
+  // .then(console.log(values))
+  // .catch(err => handleError(err, res)));
+  }
+
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
@@ -170,3 +188,4 @@ exports.information = information;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
+exports.usersHandler = usersHandler;
