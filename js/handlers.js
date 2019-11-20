@@ -22,12 +22,12 @@ function Symbol(data) {
 }
 
 function Company(data) {
-  if(data.id) this.id = data.id;
+  if (data.id) this.id = data.id;
   this.name = data.companyName;
   this.ticker = data.ticker;
-  if(data.description) this.description = data.description;
-  if(data.industry) this.industry = data.industry;
-  if(data.url) this.url = data.url;
+  if (data.description) this.description = data.description;
+  if (data.industry) this.industry = data.industry;
+  if (data.url) this.url = data.url;
 }
 
 //////////////////////////////////////////////////////////
@@ -35,32 +35,32 @@ function Company(data) {
 //////////////////////////////////////////////////////////
 async function updateCompanyData() {
   let returnArr = [];
-  
+
   let firstQuery = new Promise((resolve, reject) => {
     const options = {
       method: 'GET',
       url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
-      qs: {Mic: 'XNAS'},
+      qs: { Mic: 'XNAS' },
       headers: {
         'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
         'x-rapidapi-key': process.env.RAPID_API_KEY,
         accept: 'json'
       }
     };
-  
+
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
-      }); 
+      });
       resolve('first query success');
       reject('Error in first Query');
     })
   });
 
   const firstResult = await firstQuery;
-  
+
   firstResult;
 
   let secondQuery = new Promise((resolve, reject) => {
@@ -69,14 +69,14 @@ async function updateCompanyData() {
         const options = {
           method: 'GET',
           url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-          qs: {Ticker: `${company.ticker}`, Mic: 'XNAS'},
+          qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
           headers: {
             'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
             'x-rapidapi-key': process.env.RAPID_API_KEY,
             accept: 'string'
           }
         };
-        
+
         request(options, function (error, response, body) {
           if (error) throw new Error(error);
           const textBody = JSON.stringify(body);
@@ -132,7 +132,7 @@ function searchSymbol(req, res) {
 /////////////////////////////////////////////////////////////////////////
 /// not found handler
 /////////////////////////////////////////////////////////////////////////
-function notFoundHandler(request,response) {
+function notFoundHandler(request, response) {
   response.status(404).send('Hmmm... Something went wrong. We couldn\'t find what you are looking for.');
 }
 
@@ -144,13 +144,18 @@ function errorHandler(err, req, res) {
   res.status(500).send(err);
 }
 
-//////////////////////////////////////////////////
-/////// ABOUT US FUNCTION
-//////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////
+////ABOUT US
+////////////////////////////////////////////////////////////////////////////
+
 function information(req, res) {
   res.render('pages/aboutus');
 }
+
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
-
+exports.notFoundHandler = notFoundHandler;
+exports.errorHandler = errorHandler;
+exports.updateCompanyData = updateCompanyData;
