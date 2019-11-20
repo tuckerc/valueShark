@@ -23,7 +23,7 @@ CREATE TABLE companies (
   name text,
   description text,
   industry text,
-  urt text,
+  url text,
   data_id int
 );
 
