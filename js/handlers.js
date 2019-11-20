@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////
 const superagent = require('superagent');
 const request = require('request');
+const db = require('../db/db.js');
 
 /////////////////////////////////////////////////
 // Constructors
@@ -29,6 +30,9 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
+//////////////////////////////////////////////////////////
+// function to load data for entire NASDAQ
+//////////////////////////////////////////////////////////
 async function updateCompanyData() {
   let returnArr = [];
 
@@ -39,7 +43,7 @@ async function updateCompanyData() {
       qs: { Mic: 'XNAS' },
       headers: {
         'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+        'x-rapidapi-key': process.env.RAPID_API_KEY,
         accept: 'json'
       }
     };
@@ -68,7 +72,7 @@ async function updateCompanyData() {
           qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
           headers: {
             'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-            'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030',
+            'x-rapidapi-key': process.env.RAPID_API_KEY,
             accept: 'string'
           }
         };
@@ -77,13 +81,20 @@ async function updateCompanyData() {
           if (error) throw new Error(error);
           const textBody = JSON.stringify(body);
           let parsedBody = JSON.parse(textBody);
-          if (parsedBody.result) {
+          // if parsedBoyd.status
+          if(parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
-            company.url = parsedBody.result.contact.url;
+            company.url = parsedBody.result.contact.url;  
           }
+          db.addCompany(company);
+          // console.log(parsedBody);
+          // if(parsedBody.charAt(0) !== '<') {
+
+          // }
+
         });
-      }, 10000);
+      },100000);
     });
     resolve('good second query');
     reject('bad second query');

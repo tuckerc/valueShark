@@ -35,6 +35,7 @@ app.get('/about', handlers.information);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 
+// app.get('/about', handlers.information);
 
 ////////////////////////////////////////////////
 // Initiation
