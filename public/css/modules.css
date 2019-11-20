@@ -1,23 +1,31 @@
+.aside {
+  height: 600PX;
+  display: flex;
+  z-index: 1; 
+}
 #portfolio-bar {
-  height: 100%;
-  width: 300px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #333;
-  overflow-x: hidden;
-  padding-top: 20px;
+  background-color: rgb(10,9,111);
+  color: white;
+}
+hr {
+  margin: 0;
 }
 
 #portfolio-bar a {
-  padding: 6px 8px 6px 16px;
   text-decoration: none;
   color: #fff;
   display: block;
 }
+#portfolio-bar h1 {
+  font-size: 1.5em;
+  background-color:  rgba(255, 255, 255, 0.3);
+  padding: 20px;
+}
 .portfolio-item {
-  font-size: 16px;
+  text-align: left;
+  font-size: 18px;
+  font-weight: normal;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 #portfolio-bar a:hover {
@@ -28,16 +36,10 @@
   margin-left: 10px;
 }
 
-
-@media screen and (max-height: 450px) {
-  #portfolio-bar {padding-top: 15px;}
-  #portfolio-bar a {font-size: 18px;}
-}
 table {
   font-family: 'Roboto Condensed', sans-serif;
   border-collapse: collapse;
-  width: 50%;
-  align-items: center;
+  width: 100%;
 }
 
 td, th {
@@ -50,5 +52,6 @@ th {
 }
 
 tr:nth-child(1) {
-  background-color: rgb(10,9,111, .2);
+  background-color:rgb(84,83,155);
+  color: white;
 }

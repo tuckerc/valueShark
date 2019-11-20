@@ -1,7 +1,23 @@
 <%- include('partials/head'); -%>
 <%- include('partials/header'); -%>
-<%- include('partials/portfolio'); -%>
+
 <%- include('partials/searchbar'); -%>
-<% - include('partials/table.ejs'); -%>
+<div class="main">
+  <div id="searchResults">
+    <!-- for each result render the data -->
+    <ul id="renderedResult">
+      <li><span>Name: </span><%= name %></li>
+      <li><span>Symbol: </span><%= symbol %></li>
+      <li><span>Price: </span><%= price %></li>
+      <li><span>P/E: </span><%= pe %></li>
+      <li><span>PEG: </span><%= peg %></li>
+      <li><span>Profit Margin: </span><%= profitMargin %></li>
+      <li><span>Market Cap: </span><%= marketCap %></li>
+      <li><span>PB: </span><%= pb %></li>
+    </ul>
+  </div>
+  <%- include('partials/portfolio'); -%>
+</div>
+
 
 <%- include('partials/footer'); -%>
