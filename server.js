@@ -32,6 +32,8 @@ app.use(express.static('./public'));
 // route for Home-Page
 app.get('/', handlers.newSearch);
 app.post('/', handlers.loginHandler);
+app.get('/home',handlers.getTable);
+app.post('/home', handlers.getTable);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
 app.get('/addPortfolio', handlers.addPortfolio);

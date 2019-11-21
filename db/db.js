@@ -49,13 +49,7 @@ function getCompanies() {
   let sql = 'select * from companies';
   return client.query(sql);
 }
-//////////////////////////////////////////////////
-// Function to get data for Date Table
-//////////////////////////////////////////////////
-function getTable() {
-  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
-  return client.query(SQL);
-}
+
 // SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 and CAST('profit_margin" as interger) > 0  ORDER BY peg LIMIT 10;
 //////////////////////////////////////////////////
 // Function to update company financial data
@@ -83,6 +77,16 @@ function addPortflio(userID, companyID) {
   return client.query(sql, values);
 }
 
+//////////////////////////////////////////////////
+// Function to get data for Date Table
+//////////////////////////////////////////////////
+function getTable(req, res) {
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  return client.query(SQL);
+    
+}
+
+
 //////////////////////////////////////////////////////////////////
 // function to delete a company from a portfolio
 //////////////////////////////////////////////////////////////////
@@ -105,9 +109,9 @@ function updatePortfolio(userID, companyID, shares, avgCost) {
 exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
-exports.getTable = getTable;
 exports.addUser = addUser;
 exports.authUser = authUser;
 exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
+exports.getTable = getTable;

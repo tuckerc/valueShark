@@ -44,6 +44,7 @@ function User(name, id) {
 }
 
 
+
 //////////////////////////////////////////////////////////
 // function to handle user login
 //////////////////////////////////////////////////////////
@@ -59,8 +60,10 @@ function loginHandler(req, res) {
   db.authUser(user)
     .then(result => {
       if(result.rowCount) {
+        console.log('insideAuthUser')
         // pull portfolio
-        res.render('index');
+        // res.render('index');
+        res.redirect('/home')
       }
       else {
         // create a user
@@ -220,6 +223,7 @@ function newSearch(req, res) {
   res.render('pages/login');
 }
 
+
 /////////////////////////////////////////////////////
 // function for rendering the portfolio update page
 /////////////////////////////////////////////////////
@@ -262,6 +266,18 @@ function deletePortfolio(req, res) {
   .then(result => {
     console.log(result.rows);
   }) 
+}
+////////////////////////////////////////////////////////
+// function for getting table
+////////////////////////////////////////////////////////
+function getTable(req, res) {
+  // console.log(req);
+  db.getTable(req,res)
+  .then(result =>{
+    // console.log(result);
+    res.render('index', {tableResults: result.rows})
+  })
+  .catch(err => console.log(err))
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -313,3 +329,4 @@ exports.addPortfolio = addPortfolio;
 exports.updatePortfolio = updatePortfolio;
 exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
+exports.getTable = getTable;
