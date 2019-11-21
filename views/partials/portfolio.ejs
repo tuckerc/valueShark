@@ -6,12 +6,13 @@
   <h1>My Portfolio</h1>
   <hr>
   <% portfolio.forEach(result => { %>
-    <h3><%= result. %></h3>
-    <a class="portfolio-item" href="#"><span> MSFT - </span>Microsoft Corporation <i class="far fa-plus-square"></i> <i class="far fa-minus-square"></i></a>
-    <a class="portfolio-item" href="#"><span> APPL - </span>Apple Inc. <i class="far fa-plus-square"></i> <i class="far fa-minus-square"></i></a>
-    <a class="portfolio-item" href="#"><span> FB - </span>Facebook Inc. <i class="far fa-plus-square"></i> <i class="far fa-minus-square"></i></a>
-    <a class="portfolio-item" href="#"><span> GOOGL - </span>Alphabet Inc. <i class="far fa-plus-square"></i> <i class="far fa-minus-square"></i></a>
-    <a class="portfolio-item" href="#"><span> AMZN - </span>Amazon.com Inc. <i class="far fa-plus-square"></i> <i class="far fa-minus-square"></i></a>
+    <h3><%= result.companyName %></h3>
+    <p><%= result.ticker %></p>
+    <p>Price: <%= result.price %></p>
+    <p>Average Cost: <%= result.av_cost %></p>
+    <p>Shares Owned: <%= result.shares %></p>
+    <a class="portfolio-item" href="/updatePortfolio">Update</a>
+    <a class='portfolio-item' href='/deletePortfolio'>Delete</a>
   <% }) %>
 </aside>
 
