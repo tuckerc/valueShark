@@ -1,17 +1,28 @@
-<%- include('../partials/head'); -%>
+<%- include('partials/head'); -%>
+<%- include('partials/header'); -%>
 
-<%- include('../partials/header'); -%>
-<%- include('../partials/searchbar'); -%>
-<div id="UserName">
-    <form id="User-Name" action="/users" method="POST">
-        <label for="users"> Enter Name
-            <input type="text" name="userfield" value="userName" required>
-        </label>
-        <button type="submit" name="submit">submit</button>
-
-    </form>
+<%- include('partials/searchbar'); -%>
+<div class="main">
+  <div id="searchResults">
+    <!-- for each result render the data -->
+    <ul id="renderedResult">
+      <li><span>Name: </span><%= name %></li>
+      <li><span>Symbol: </span><%= symbol %></li>
+      <li><span>Price: </span><%= price %></li>
+      <li><span>P/E: </span><%= pe %></li>
+      <li><span>PEG: </span><%= peg %></li>
+      <li><span>Profit Margin: </span><%= profitMargin %></li>
+      <li><span>Market Cap: </span><%= marketCap %></li>
+      <li><span>PB: </span><%= pb %></li>
+    </ul>
+  </div>
+  <%- include('partials/portfolio'); -%>
 </div>
 
+<<<<<<< HEAD
+
+<%- include('partials/footer'); -%>
+=======
 <div class="main">
 
     <%- include('../partials/table'); -%>
@@ -21,3 +32,4 @@
 
 <%- include('../partials/footer'); -%>
 
+>>>>>>> 44521396e128603b72465ad520e2f8db317ed3b6

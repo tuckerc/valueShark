@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////
 const superagent = require('superagent');
 const request = require('request');
+const uuidv5 = require('uuid/v5');
 const db = require('../db/db.js');
 
 /////////////////////////////////////////////////
@@ -37,28 +38,62 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
-function User(name) {
-  // console.log(name)
+function User(name, id) {
   this.name = name;
+  this.id = id;
 }
 
 
 //////////////////////////////////////////////////////////
-///////ADDING A FUNCTION  FOR PORTFOLIO
+// function to handle user login
 //////////////////////////////////////////////////////////
+function loginHandler(req, res) {
+  // // check if user exists
+  // let name = `${req.body.userfield}${Date.now()}`;
 
-function usersHandler(req, res) {
-  let names = req.body.userfield;
-  const newUser = new User(names);
-  console.log(newUser)
-  // console.log(newUser)
-  // console.log(db.addUser(new User(names)));
+  // if(localStorage.getItem('value_shark')) {
+  //   name = localStorage.getItem('value_shark');
+  //   const user = new User(name);
+  //   console.log('existing user' + user);
+  //   // pull user data from database
 
-  res.redirect('/');
+  // }
+  // else {
+  //   // set local storage
+  //   let name = `${req.body.userfield}${Date.now()}`;
+  //   const newUser = new User(name);
+  //   localStorage.setItem('value_shark', newUser.name);
 
-  // res.send(client.query(SQL,values)
-  // .then(console.log(values))
-  // .catch(err => handleError(err, res)));
+  //   db.addUser(new User(name))
+  //   .then(result => {
+  //     console.log(result);
+  //     res.redirect('/');
+  //   })
+  // }
+
+  const userName = req.body.name.toLowerCase();
+  const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
+  const userID = uuidv5(userName, namespace);
+
+  const user = new User(userName, userID);
+
+  console.log(user);
+
+  db.authUser(user)
+    .then(result => {
+      if(result.rowCount) {
+        // pull portfolio
+        res.render('index');
+      }
+      else {
+        // create a user
+        db.addUser(user)
+          .then(result => {
+            res.render('index');
+          })
+      }
+    })
+    .catch(err => errorHandler(err, req, res));
 }
 
 //////////////////////////////////////////////////////////
@@ -111,7 +146,6 @@ async function updateCompanyData() {
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
-        console.log(company.name + ': ' + body);
         const bodyCheck = body.substring(0, 9);
         if (bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
@@ -142,21 +176,6 @@ async function updateCompanyData() {
   let lastResult = await success;
 
   lastResult;
-}
-
-//////////////////////////////////////////////////
-// Function to get financial data for each company
-//////////////////////////////////////////////////
-function _getCoFinData(ticker) {
-  // superagent.get('https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics')
-  //   .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
-  //   .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-  //   .send({region:'US', symbol:'aapl'})
-  //   .then( result => {
-  //     return result;
-  //   })
-  //   .catch(err => console.log(err));
-  
 }
 
 //////////////////////////////////////////////////
@@ -222,7 +241,7 @@ async function updateCoFinData() {
 // function to render home screen
 //////////////////////////////////////////////////
 function newSearch(req, res) {
-  res.render('pages/detail-view');
+  res.render('pages/login');
 }
 
 /////////////////////////////////////////////////
@@ -277,5 +296,5 @@ exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
-exports.usersHandler = usersHandler;
+exports.loginHandler = loginHandler;
 exports.updateCoFinData = updateCoFinData;
