@@ -92,6 +92,7 @@ async function updateCompanyData() {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
+      console.log(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
       });
@@ -195,7 +196,7 @@ async function updateCoFinData() {
       qs: {region: 'US', symbol: company.ticker},
       headers: {
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
+        'x-rapidapi-key': process.env.RAPID_API_KEY
       }
     };
     
@@ -275,9 +276,14 @@ function information(req, res) {
   res.render('pages/aboutus');
 }
 
+function table(req, res){
+  res.render('partials/table');
+}
+
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
+exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
