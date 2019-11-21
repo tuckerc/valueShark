@@ -220,7 +220,7 @@ function renderLogin(req, res) {
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
-async function pullData(req, res) {
+async function pullData() {
   
   let results = {};
   
@@ -228,7 +228,7 @@ async function pullData(req, res) {
     .then(result => {
       results.portfolio = result.rows;
     })
-    .catch(err => errorHandler(err, req, res));
+    .catch(err => errorHandler(err));
 
   const getPortfolioResult = await getPortfolioQuery;
   getPortfolioResult;
@@ -239,7 +239,7 @@ async function pullData(req, res) {
       .then(result => {
         results.table = result.rows;
       })
-      .catch(err => errorHandler(err, req, res));
+      .catch(err => errorHandler(err));
 
   const getTableDataResult = await getTableData;
   getTableDataResult;
@@ -248,7 +248,7 @@ async function pullData(req, res) {
 
   const render = new Promise((resolve, reject) => {
     console.log('last before render ', results);
-    res.render('index', results);
+    return results;
     resolve('render');
     reject('no render');
   });
@@ -268,16 +268,22 @@ function renderPortfolioUpdate(req, res) {
 /////////////////////////////////////////////////
 // function to search for single ticker
 /////////////////////////////////////////////////
-function searchSymbol(req, res) {
+function searchSymbol(ticker) {
 
-  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
+  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.render('pages/search', symbol);
+     return symbol;
     })
-    .catch(err => errorHandler(err, req, res));
+    .catch(err => errorHandler(err));
+}
+
+function searchRender(req,res) {
+  let results = {};
+
+  results.symbol = searchSymbol(req.body.symbolField);
 }
 
 ////////////////////////////////////////////////////////////////////////
