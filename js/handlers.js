@@ -117,6 +117,7 @@ async function updateCompanyData() {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
+      console.log(body);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
       });
@@ -284,9 +285,14 @@ function information(req, res) {
   res.render('pages/aboutus');
 }
 
+function table(req, res){
+  res.render('partials/table');
+}
+
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
+exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;

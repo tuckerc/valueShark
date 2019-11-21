@@ -28,6 +28,14 @@ body {
     overflow: scroll;
     height: 100vh;
     width: 100%;
+    color: honeydew;
+    font-size: 20;
+  }
+  #about{
+    display: flex;
+    color: honeydew;
+    font-size: 20;
+    justify-self:  right;
   }
   .aside { 
     flex: 1 0 0;
@@ -76,6 +84,7 @@ body {
 footer {
   height: 90px;
   background-color: rgb(10,9,111);
+  color: white;
 }
   /* searchbar/logo*/
 header {
