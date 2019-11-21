@@ -33,7 +33,7 @@ app.set('view engine', 'ejs');
 app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
-app.get('/table', handlers.table);
+// app.get('/table', handlers.tableData);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 
@@ -51,4 +51,4 @@ schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
 
 // handlers.updateCompanyData();
 
-handlers.updateCoFinData();
+// handlers.updateCoFinData();
