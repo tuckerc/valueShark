@@ -22,7 +22,6 @@ function addCompany(data) {
   return client.query(sql, values);
 }
 
-
 ////////////////////////////////////////////////
 ////ADD USERS
 ///////////////////////////////////////////////
@@ -34,7 +33,33 @@ function addUser(data) {
 
 }
 
+//////////////////////////////////////////////////
+// Function to retreive company
+//////////////////////////////////////////////////
+function getCompanies() {
+  let sql = 'select * from companies';
+  return client.query(sql);
+}
 
+//////////////////////////////////////////////////
+// Function to update company financial data
+//////////////////////////////////////////////////
+async function updateCompanyData(company) {
+  let sql = 'delete from company_data where ticker = $1';
+  let values = [company.ticker];
+  const deleteQuery = client.query(sql, values);
+  const deleteResult = await deleteQuery;
+  deleteResult;
+  
+  sql = 'insert into company_data (ticker, price, pe, pb, peg, profit_margin, market_cap) values ($1, $2, $3, $4, $5, $6, $7) returning *';
+  values = [company.ticker, company.price, company.pe, company.pb, company.peg, company.profitMargin, company.marketCap];
+  const updateQuery = client.query(sql, values);
+  const updateResult = await updateQuery;
+  return updateResult;
+}
 
 exports.addCompany = addCompany;
+exports.getCompanies = getCompanies;
+exports.updateCompanyData = updateCompanyData;
 exports.addUser = addUser;
+
