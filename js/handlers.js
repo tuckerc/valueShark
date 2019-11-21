@@ -221,6 +221,13 @@ function newSearch(req, res) {
   res.render('pages/login');
 }
 
+/////////////////////////////////////////////////////
+// function for rendering the portfolio update page
+/////////////////////////////////////////////////////
+function renderPortfolioUpdate(req, res) {
+  res.render('pages/portfolio-edit');
+}
+
 /////////////////////////////////////////////////
 // function to search for single ticker
 /////////////////////////////////////////////////
@@ -247,6 +254,17 @@ function addPortfolio(req, res) {
     .then(result => {
       console.log(result.rows);
     })
+}
+
+////////////////////////////////////////////////////////
+// function for deleting a company from user portfolio
+////////////////////////////////////////////////////////
+function deletePortfolio(req, res) {
+ console.log(req);
+ db.deletePortfolio(req.body.userID, req.body.coID)
+  .then(result => {
+    console.log(result.rows);
+  }) 
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -299,3 +317,5 @@ exports.loginHandler = loginHandler;
 exports.updateCoFinData = updateCoFinData;
 exports.addPortfolio = addPortfolio;
 exports.updatePortfolio = updatePortfolio;
+exports.renderPortfolioUpdate = renderPortfolioUpdate;
+exports.deletePortfolio = deletePortfolio;

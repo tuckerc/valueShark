@@ -77,18 +77,27 @@ async function updateCompanyData(company) {
 ////////////////////////////////////////////////////////////////////
 // function to add a company to a portfolio
 ////////////////////////////////////////////////////////////////////
-function addPortflio(user, companyID) {
+function addPortflio(userID, companyID) {
   let sql = 'insert into portfolios (id, company_id) values ($1, $2) returning *';
-  let values = [user.id, companyID];
+  let values = [userID, companyID];
+  return client.query(sql, values);
+}
+
+//////////////////////////////////////////////////////////////////
+// function to delete a company from a portfolio
+//////////////////////////////////////////////////////////////////
+function deletePortfolio(userID, companyID) {
+  let sql = 'delete from portfolios where id = $1 and company_id = $2 returning *';
+  let values = [userID, companyID];
   return client.query(sql, values);
 }
 
 ////////////////////////////////////////////////////////////////////
 // function to update a company in a portfolio
 ////////////////////////////////////////////////////////////////////
-function updatePortfolio(user, companyID, shares, avgCost) {
+function updatePortfolio(userID, companyID, shares, avgCost) {
   let sql = 'update portfolios set shares = $1, av_cost = $2 where id = $3 and company_id = $4 returning *';
-  let values = [shares, avgCost, user.id, companyID];
+  let values = [shares, avgCost, userID, companyID];
   return client.query(sql, values);
 }
 
@@ -101,3 +110,4 @@ exports.addUser = addUser;
 exports.authUser = authUser;
 exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
+exports.deletePortfolio = deletePortfolio;
