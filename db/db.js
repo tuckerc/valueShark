@@ -29,6 +29,7 @@ async function addUser(user) {
   // add new user
   let sql = 'INSERT INTO users (name, id) VALUES ($1, $2) returning *';
   let values = [user.name.toLowerCase(), user.id];
+  
   const newUserQuery = client.query(sql,values);
   const newUserResult = await newUserQuery;
   newUserResult;
@@ -88,9 +89,4 @@ exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
 exports.getTable = getTable;
 exports.addUser = addUser;
-<<<<<<< HEAD
 exports.authUser = authUser;
-=======
-
-
->>>>>>> 44521396e128603b72465ad520e2f8db317ed3b6
