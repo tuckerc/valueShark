@@ -2,12 +2,12 @@
 -- 
 
 -- DROP TABLE IF EXISTS  users, portfolios, companies, company_data;
-DROP TABLE IF EXISTS  portfolios;
+DROP TABLE IF EXISTS  portfolios, users;
 
--- CREATE TABLE users (
---   name VARCHAR(255),
---   id varchar(255) primary key
--- );
+CREATE TABLE users (
+  name VARCHAR(255),
+  id varchar(255) primary key
+);
 
 CREATE TABLE portfolios (
   id varchar(255) primary key,
