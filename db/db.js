@@ -29,16 +29,8 @@ async function addUser(user) {
   // add new user
   let sql = 'INSERT INTO users (name, id) VALUES ($1, $2) returning *';
   let values = [user.name.toLowerCase(), user.id];
-  const newUserQuery = client.query(sql,values);
-  const newUserResult = await newUserQuery;
-  newUserResult;
-
-  // create portfolio for user
-  sql = 'insert into portfolios (id) values ($1) returning *';
-  values = [user.id];
-  const newPortfolioQuery = client.query(sql, values);
-  const newPortfolioResult = await newPortfolioQuery;
-  return newPortfolioResult;
+  
+  return client.query(sql,values);
 }
 
 ////////////////////////////////////////////////
@@ -56,17 +48,13 @@ function authUser(user) {
 function getCompanies() {
   let sql = 'select * from companies';
   return client.query(sql);
-  
 }
 //////////////////////////////////////////////////
-// Function to get data for Data Table
+// Function to get data for Date Table
 //////////////////////////////////////////////////
 function getTable() {
   let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
-  return client.query(SQL)
-  .then( result => {
-    return res.render('partials/table', { stock: result.rows } );
-})
+  return client.query(SQL);
 }
 // SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 and CAST('profit_margin" as interger) > 0  ORDER BY peg LIMIT 10;
 //////////////////////////////////////////////////
@@ -86,6 +74,33 @@ async function updateCompanyData(company) {
   return updateResult;
 }
 
+////////////////////////////////////////////////////////////////////
+// function to add a company to a portfolio
+////////////////////////////////////////////////////////////////////
+function addPortflio(userID, companyID) {
+  let sql = 'insert into portfolios (id, company_id) values ($1, $2) returning *';
+  let values = [userID, companyID];
+  return client.query(sql, values);
+}
+
+//////////////////////////////////////////////////////////////////
+// function to delete a company from a portfolio
+//////////////////////////////////////////////////////////////////
+function deletePortfolio(userID, companyID) {
+  let sql = 'delete from portfolios where id = $1 and company_id = $2 returning *';
+  let values = [userID, companyID];
+  return client.query(sql, values);
+}
+
+////////////////////////////////////////////////////////////////////
+// function to update a company in a portfolio
+////////////////////////////////////////////////////////////////////
+function updatePortfolio(userID, companyID, shares, avgCost) {
+  let sql = 'update portfolios set shares = $1, av_cost = $2 where id = $3 and company_id = $4 returning *';
+  let values = [shares, avgCost, userID, companyID];
+  return client.query(sql, values);
+}
+
 
 exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
@@ -93,3 +108,6 @@ exports.updateCompanyData = updateCompanyData;
 exports.getTable = getTable;
 exports.addUser = addUser;
 exports.authUser = authUser;
+exports.addPortflio = addPortflio;
+exports.updatePortfolio = updatePortfolio;
+exports.deletePortfolio = deletePortfolio;
