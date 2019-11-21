@@ -52,21 +52,18 @@ function loginHandler(req, res) {
   const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
   const userID = uuidv5(userName, namespace);
 
-  const user = new User(userName, userID);
-
-  console.log(user);
+  const user = new User(userName.toLowerCase(), userID);
 
   db.authUser(user)
     .then(result => {
       if(result.rowCount) {
-        // pull portfolio
-        res.render('index');
+        res.redirect('/home?userID=' + user.id);
       }
       else {
         // create a user
         db.addUser(user)
           .then(result => {
-            res.render('index');
+            res.redirect('/home?userID=' + user.id);
           })
       }
     })
@@ -214,11 +211,52 @@ async function updateCoFinData() {
   // console.log(tempArr);
 }
 
+/////////////////////////////////////////////////
+// function to render login screen
+/////////////////////////////////////////////////
+function renderLogin(req, res) {
+  res.render('pages/login');
+}
+
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
-function newSearch(req, res) {
-  res.render('pages/login');
+async function pullData(req, res) {
+  
+  let results = {};
+  
+  const getPortfolioQuery = db.getPortfolio(req.query.userID)
+    .then(result => {
+      results.portfolio = result.rows;
+    })
+    .catch(err => errorHandler(err, req, res));
+
+  const getPortfolioResult = await getPortfolioQuery;
+  getPortfolioResult;
+
+  console.log('after first await: ', results);
+
+  const getTableData = db.getTable()
+      .then(result => {
+        results.table = result.rows;
+      })
+      .catch(err => errorHandler(err, req, res));
+
+  const getTableDataResult = await getTableData;
+  getTableDataResult;
+
+  console.log('after second await ', results);
+
+  const render = new Promise((resolve, reject) => {
+    console.log('last before render ', results);
+    res.render('index', results);
+    resolve('render');
+    reject('no render');
+  });
+  
+  const renderResult = await render;
+  renderResult;
+
 }
 
 /////////////////////////////////////////////////////
@@ -306,7 +344,7 @@ function table(req, res){
   res.render('partials/table');
 }
 
-exports.newSearch = newSearch;
+exports.pullData = pullData;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
 exports.table = table;
@@ -319,3 +357,4 @@ exports.addPortfolio = addPortfolio;
 exports.updatePortfolio = updatePortfolio;
 exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
+exports.renderLogin = renderLogin;
