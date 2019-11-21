@@ -52,21 +52,18 @@ function loginHandler(req, res) {
   const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
   const userID = uuidv5(userName, namespace);
 
-  const user = new User(userName, userID);
-
-  console.log(user);
+  const user = new User(userName.toLowerCase(), userID);
 
   db.authUser(user)
     .then(result => {
       if(result.rowCount) {
-        // pull portfolio
-        res.render('index');
+        res.redirect('/home?userID=' + user.id);
       }
       else {
         // create a user
         db.addUser(user)
           .then(result => {
-            res.render('index');
+            res.redirect('/home?userID=' + user.id);
           })
       }
     })
@@ -119,20 +116,19 @@ async function updateCompanyData() {
           accept: 'string'
         }
       };
-
+      
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
         const bodyCheck = body.substring(0, 9);
         if (bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
-          if (parsedBody.result) {
+          if(parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
         }
-
         db.addCompany(company);
       });
     });
@@ -182,7 +178,7 @@ async function updateCoFinData() {
       qs: {region: 'US', symbol: company.ticker},
       headers: {
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': process.env.RAPID_API_KEY
+        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
       }
     };
     
@@ -214,11 +210,59 @@ async function updateCoFinData() {
   // console.log(tempArr);
 }
 
+/////////////////////////////////////////////////
+// function to render login screen
+/////////////////////////////////////////////////
+function renderLogin(req, res) {
+  res.render('pages/login');
+}
+
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
-function newSearch(req, res) {
-  res.render('pages/login');
+async function pullData(req, res) {
+  
+  let results = {};
+  
+  const getPortfolioQuery = db.getPortfolio(req.query.userID)
+    .then(result => {
+      results.portfolio = result.rows;
+    })
+    .catch(err => errorHandler(err, req, res));
+
+  const getPortfolioResult = await getPortfolioQuery;
+  getPortfolioResult;
+
+  console.log('after first await: ', results);
+
+  const getTableData = db.getTable()
+      .then(result => {
+        results.table = result.rows;
+      })
+      .catch(err => errorHandler(err, req, res));
+
+  const getTableDataResult = await getTableData;
+  getTableDataResult;
+
+  console.log('after second await ', results);
+
+  const render = new Promise((resolve, reject) => {
+    console.log('last before render ', results);
+    res.render('index', results);
+    resolve('render');
+    reject('no render');
+  });
+  
+  const renderResult = await render;
+  renderResult;
+
+}
+
+/////////////////////////////////////////////////////
+// function for rendering the portfolio update page
+/////////////////////////////////////////////////////
+function renderPortfolioUpdate(req, res) {
+  res.render('pages/portfolio-edit');
 }
 
 /////////////////////////////////////////////////
@@ -229,11 +273,9 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-
-
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.render('index', symbol);
+      res.render('pages/search', symbol);
     })
     .catch(err => errorHandler(err, req, res));
 }
@@ -247,6 +289,17 @@ function addPortfolio(req, res) {
     .then(result => {
       console.log(result.rows);
     })
+}
+
+////////////////////////////////////////////////////////
+// function for deleting a company from user portfolio
+////////////////////////////////////////////////////////
+function deletePortfolio(req, res) {
+ console.log(req);
+ db.deletePortfolio(req.body.userID, req.body.coID)
+  .then(result => {
+    console.log(result.rows);
+  }) 
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -284,14 +337,11 @@ function information(req, res) {
   res.render('pages/aboutus');
 }
 
-function table(req, res){
-  res.render('partials/table');
-}
 
-exports.newSearch = newSearch;
+
+exports.pullData = pullData;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
-exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
@@ -299,3 +349,6 @@ exports.loginHandler = loginHandler;
 exports.updateCoFinData = updateCoFinData;
 exports.addPortfolio = addPortfolio;
 exports.updatePortfolio = updatePortfolio;
+exports.renderPortfolioUpdate = renderPortfolioUpdate;
+exports.deletePortfolio = deletePortfolio;
+exports.renderLogin = renderLogin;

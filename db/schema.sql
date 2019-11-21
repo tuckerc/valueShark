@@ -2,7 +2,7 @@
 -- 
 
 -- DROP TABLE IF EXISTS  users, portfolios, companies, company_data;
-DROP TABLE IF EXISTS  portfolios, users;
+DROP TABLE IF EXISTS users, portfolios;
 
 CREATE TABLE users (
   name VARCHAR(255),
