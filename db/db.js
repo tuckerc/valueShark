@@ -83,6 +83,16 @@ function addPortflio(userID, companyID) {
   return client.query(sql, values);
 }
 
+//////////////////////////////////////////////////
+// Function to get data for Date Table
+//////////////////////////////////////////////////
+function getTable(req, res) {
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  return client.query(SQL);
+    
+}
+
+
 //////////////////////////////////////////////////////////////////
 // function to delete a company from a portfolio
 //////////////////////////////////////////////////////////////////
@@ -114,10 +124,10 @@ function getPortfolio(userID) {
 exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
-exports.getTable = getTable;
 exports.addUser = addUser;
 exports.authUser = authUser;
 exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
+exports.getTable = getTable;
 exports.getPortfolio = getPortfolio;
