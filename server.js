@@ -19,28 +19,26 @@ const handlers = require('./js/handlers.js');
 // Application Configuration
 ////////////////////////////////////////////////
 const app = express();
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 const PORT = process.env.PORT || 3000;
-
+app.set('view engine', 'ejs');
 
 ////////////////////////////////////////////////
 // Routes
 ////////////////////////////////////////////////
 app.use(express.static('./public'));
-app.set('view engine', 'ejs');
 
+// route for Home-Page
 app.get('/', handlers.newSearch);
+app.post('/', handlers.loginHandler);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
-// app.get('/table', handlers.tableData);
-app.post('/users', handlers.usersHandler);
-
+app.get('/addPortfolio', handlers.addPortfolio);
+app.get('/updatePortfolio', handlers.updatePortfolio);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 
-
-// app.get('/about', handlers.information);
 
 ////////////////////////////////////////////////
 // Initiation
