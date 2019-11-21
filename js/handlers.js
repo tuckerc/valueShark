@@ -48,29 +48,6 @@ function User(name, id) {
 // function to handle user login
 //////////////////////////////////////////////////////////
 function loginHandler(req, res) {
-  // // check if user exists
-  // let name = `${req.body.userfield}${Date.now()}`;
-
-  // if(localStorage.getItem('value_shark')) {
-  //   name = localStorage.getItem('value_shark');
-  //   const user = new User(name);
-  //   console.log('existing user' + user);
-  //   // pull user data from database
-
-  // }
-  // else {
-  //   // set local storage
-  //   let name = `${req.body.userfield}${Date.now()}`;
-  //   const newUser = new User(name);
-  //   localStorage.setItem('value_shark', newUser.name);
-
-  //   db.addUser(new User(name))
-  //   .then(result => {
-  //     console.log(result);
-  //     res.redirect('/');
-  //   })
-  // }
-
   const userName = req.body.name.toLowerCase();
   const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
   const userID = uuidv5(userName, namespace);
@@ -261,6 +238,28 @@ function searchSymbol(req, res) {
     .catch(err => errorHandler(err, req, res));
 }
 
+////////////////////////////////////////////////////////////////////////
+// function for adding a company to a portfolio
+////////////////////////////////////////////////////////////////////////
+function addPortfolio(req, res) {
+  console.log(req);
+  db.addPortfolio(req.body.userID, req.body.coID)
+    .then(result => {
+      console.log(result.rows);
+    })
+}
+
+////////////////////////////////////////////////////////////////////////
+// function for updating a company in a portfolio
+////////////////////////////////////////////////////////////////////////
+function updatePortfolio(req, res) {
+  console.log(req);
+  db.addPortfolio(req.body.userID, req.body.coID, req.body.shares, req.body.avgCost)
+    .then(result => {
+      console.log(result.rows);
+    })
+}
+
 /////////////////////////////////////////////////////////////////////////
 /// not found handler
 /////////////////////////////////////////////////////////////////////////
@@ -298,3 +297,5 @@ exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
 exports.loginHandler = loginHandler;
 exports.updateCoFinData = updateCoFinData;
+exports.addPortfolio = addPortfolio;
+exports.updatePortfolio = updatePortfolio;

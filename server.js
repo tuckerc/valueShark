@@ -34,6 +34,8 @@ app.get('/', handlers.newSearch);
 app.post('/', handlers.loginHandler);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
+app.get('/addPortfolio', handlers.addPortfolio);
+app.get('/updatePortfolio', handlers.updatePortfolio);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 
