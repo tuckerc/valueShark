@@ -59,17 +59,7 @@ function usersHandler(req, res) {
   // res.send(client.query(SQL,values)
   // .then(console.log(values))
   // .catch(err => handleError(err, res)));
-}
 
-
-////////////////////////////////////////////////////////////
-/////////DELETING NAMES FROM DATABASE
-////////////////////////////////////////////////////////////
-// function deleteUsers(req,res) {
-//   let names = req.body.userfield;
-//   const oldUser = oldUser;
-
-// }
 
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
