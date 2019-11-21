@@ -22,6 +22,17 @@ function addCompany(data) {
   return client.query(sql, values);
 }
 
+////////////////////////////////////////////////
+////ADD USERS
+///////////////////////////////////////////////
+function addUser(data) {
+  let sql = 'INSERT INTO users (name) VALUES ($1) returning *';
+  let values = [data];
+  return client.query(sql,values)
+
+
+}
+
 //////////////////////////////////////////////////
 // Function to retreive company
 //////////////////////////////////////////////////
@@ -59,3 +70,6 @@ exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
 exports.getTable = getTable;
+exports.addUser = addUser;
+
+

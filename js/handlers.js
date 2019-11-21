@@ -37,6 +37,30 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
+function User(name) {
+  // console.log(name)
+  this.name = name;
+}
+
+
+//////////////////////////////////////////////////////////
+///////ADDING A FUNCTION  FOR PORTFOLIO
+//////////////////////////////////////////////////////////
+
+function usersHandler(req, res) {
+  let names = req.body.userfield;
+  const newUser = new User(names);
+  console.log(newUser)
+  // console.log(newUser)
+  // console.log(db.addUser(new User(names)));
+
+  res.redirect('/');
+
+  // res.send(client.query(SQL,values)
+  // .then(console.log(values))
+  // .catch(err => handleError(err, res)));
+}
+
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
@@ -83,20 +107,21 @@ async function updateCompanyData() {
           accept: 'string'
         }
       };
-      
+
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
         console.log(company.name + ': ' + body);
-        const bodyCheck = body.substring(0,9);
-        if(bodyCheck === '{"result"') {
+        const bodyCheck = body.substring(0, 9);
+        if (bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
-          if(parsedBody.result) {
+          if (parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
         }
+
         db.addCompany(company);
       });
     });
@@ -161,7 +186,7 @@ async function updateCoFinData() {
       qs: {region: 'US', symbol: company.ticker},
       headers: {
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
+        'x-rapidapi-key': process.env.RAPID_API_KEY
       }
     };
     
@@ -208,6 +233,8 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
+
+
     .then( result => {
       const symbol = new Symbol(result.body);
       res.render('index', symbol);
@@ -250,4 +277,5 @@ exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
+exports.usersHandler = usersHandler;
 exports.updateCoFinData = updateCoFinData;
