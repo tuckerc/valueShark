@@ -33,9 +33,11 @@ app.set('view engine', 'ejs');
 app.get('/', handlers.newSearch);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
-// app.get('/table', handlers.tableData);
+// app.get('/', handlers.getData)
+// app.post('/users', handlers.usersHandler);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
+
 
 // app.get('/about', handlers.information);
 
@@ -48,6 +50,8 @@ app.listen(PORT, () => {
 
 // update company data every month on the first day at midnight
 schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
+
+schedule.scheduleJob('* * 0 * * *', handlers.updateCoFinData);
 
 // handlers.updateCompanyData();
 

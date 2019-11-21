@@ -22,19 +22,34 @@ function addCompany(data) {
   return client.query(sql, values);
 }
 
+////////////////////////////////////////////////
+////ADD USERS
+///////////////////////////////////////////////
+function addUser(data) {
+  let sql = 'INSERT INTO users (name) VALUES ($1) returning *';
+  let values = [data];
+  return client.query(sql,values)
+
+
+}
+
 //////////////////////////////////////////////////
 // Function to retreive company
 //////////////////////////////////////////////////
 function getCompanies() {
   let sql = 'select * from companies';
   return client.query(sql);
+  
 }
 //////////////////////////////////////////////////
-// Function to get data for Date Table
+// Function to get data for Data Table
 //////////////////////////////////////////////////
 function getTable() {
   let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
-  return client.query(SQL);
+  return client.query(SQL)
+  .then( result => {
+    return res.render('partials/table', { stock: result.rows } );
+})
 }
 // SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 and CAST('profit_margin" as interger) > 0  ORDER BY peg LIMIT 10;
 //////////////////////////////////////////////////
@@ -59,3 +74,4 @@ exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
 exports.getTable = getTable;
+exports.addUser = addUser;

@@ -37,6 +37,19 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
+function tableData (data) {
+  this.name = data.name;
+  this.ticker = data.ticker;
+  this.pe = data.pe;
+  this.peg = data.peg; 
+  this.pb = data.pb;
+  this.profitMargin= data.profitMargin;
+  this.price = data.price; 
+  this.marketCap= data.marketCap;
+}
+
+
+
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
@@ -192,7 +205,12 @@ async function updateCoFinData() {
 
   // console.log(tempArr);
 }
-
+//////////////////////////////////////////////////
+// function to rendertable
+//////////////////////////////////////////////////
+function tableData(req, res){
+  res.render('partials/table');
+}
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
@@ -239,15 +257,13 @@ function information(req, res) {
   res.render('pages/aboutus');
 }
 
-function table(req, res){
-  res.render('partials/table');
-}
+
 
 exports.newSearch = newSearch;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
-exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
 exports.updateCoFinData = updateCoFinData;
+exports.tableData = tableData;

@@ -12,5 +12,19 @@
     <th>PB</th>
     <th>Market Cap</th>
   </tr>
+  <tr>
+        <% result.rows.forEach(stock => { %>
+            <th> <%= stock.name %></th>
+            <th> <%= ticker %></th>
+            <th> <%= price %></th>
+            <th> <%= pe %></th>
+            <th> <%= peg %></th>
+            <th> <%= beta %></th>
+            <th> <%= profitMargin %></th>
+            <th> <%= pb %></th>
+            <th> <%= marketCap %></th>
+            <% }) %>
+  
+    </tr> 
 </table>
 </div>
