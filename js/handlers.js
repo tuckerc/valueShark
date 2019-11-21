@@ -116,20 +116,19 @@ async function updateCompanyData() {
           accept: 'string'
         }
       };
-
+      
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
         const bodyCheck = body.substring(0, 9);
         if (bodyCheck === '{"result"') {
           let parsedBody = JSON.parse(body);
-          if (parsedBody.result) {
+          if(parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
         }
-
         db.addCompany(company);
       });
     });
@@ -179,7 +178,7 @@ async function updateCoFinData() {
       qs: {region: 'US', symbol: company.ticker},
       headers: {
         'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': process.env.RAPID_API_KEY
+        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
       }
     };
     
@@ -274,11 +273,9 @@ function searchSymbol(req, res) {
   superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
-
-
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.render('index', symbol);
+      res.render('pages/search', symbol);
     })
     .catch(err => errorHandler(err, req, res));
 }
@@ -340,14 +337,11 @@ function information(req, res) {
   res.render('pages/aboutus');
 }
 
-function table(req, res){
-  res.render('partials/table');
-}
+
 
 exports.pullData = pullData;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
-exports.table = table;
 exports.notFoundHandler = notFoundHandler;
 exports.errorHandler = errorHandler;
 exports.updateCompanyData = updateCompanyData;
