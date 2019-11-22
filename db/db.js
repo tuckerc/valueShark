@@ -95,6 +95,16 @@ function addPortflio(userID, companyID) {
   return client.query(sql, values);
 }
 
+//////////////////////////////////////////////////
+// Function to get data for Date Table
+//////////////////////////////////////////////////
+function getTable(req, res) {
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  return client.query(SQL);
+    
+}
+
+
 //////////////////////////////////////////////////////////////////
 // function to delete a company from a portfolio
 //////////////////////////////////////////////////////////////////
@@ -117,8 +127,10 @@ function updatePortfolio(userID, companyID, shares, avgCost) {
 // function to pull portfolio data for user
 ///////////////////////////////////////////////////////////////////
 function getPortfolio(userID) {
-  let sql = 'select * from users inner join portfolios on users.id = portfolios.id where users.id = $1';
-  let values = [userID];
+  console.log('userID passed to getPortfolio: ', userID);
+  let sql = 'select users.id as userID, users.name as userName, portfolios.shares, portfolios.av_cost, companies.name as companyName, companies.ticker, company_data.price from users left outer join portfolios on users.id = portfolios.id left outer join companies on portfolios.company_id = companies.id left outer join company_data on companies.ticker = company_data.ticker where users.id = $1';
+  const uID = String(userID);
+  let values = [uID];
   return client.query(sql, values);
 }
 
@@ -126,11 +138,11 @@ function getPortfolio(userID) {
 exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
-exports.getTable = getTable;
 exports.addUser = addUser;
 exports.authUser = authUser;
 exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
+exports.getTable = getTable;
 exports.getPortfolio = getPortfolio;
 // exports.getDetails = getDetails;
