@@ -93,7 +93,7 @@ async function updateCompanyData() {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       let parsedBody = JSON.parse(body);
-      console.log(body);
+      // console.log(parsedBody);
       parsedBody.results.forEach(company => {
         returnArr.push(new Company(company));
       });
@@ -119,18 +119,16 @@ async function updateCompanyData() {
         }
       };
       
-      setTimeout(request, 1000 * idx, options, (error, response, body) => {
+      setTimeout(request, 2000 * idx, options, (error, response, body) => {
         if (error) throw new Error(error);
         // const textBody = JSON.stringify(body);
-        const bodyCheck = body.substring(0, 9);
-        if (bodyCheck === '{"result"') {
-          let parsedBody = JSON.parse(body);
+        let parsedBody = JSON.parse(body);
+        console.log(parsedBody);
           if(parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
-        }
         db.addCompany(company);
       });
     });
