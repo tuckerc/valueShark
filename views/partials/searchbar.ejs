@@ -2,7 +2,7 @@
 <div>
   <form id="new-search" action="/search" method="POST">
     <label for="stock"> Search a Stock
-      <input type='hidden' name='userID' value= '<%= portfolio.userID %>'>
+      <input type='hidden' name='userID' value='<%= portfolio.userID %>'>
       <input type="text" name="symbolField" placeholder="Enter a ticker symbol (MSFT, AMZN)..." required>
     </label>
     <input type='submit' name='submit' value='Submit'>
