@@ -21,8 +21,6 @@ body {
   padding-top: 30px;
   width: 360px;
 }
-
-
 @media all and (max-width: 600px) {
 
   .wrapper{
@@ -73,7 +71,6 @@ body {
   header {
     height: auto;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-
   }
   footer  { 
     order: 4; 
@@ -106,8 +103,6 @@ body {
     padding: 10px;
     border: none;
     box-shadow: none;
-    /* background-color: #dfe6e9; */
-
   }
   #search-btn {
     width: 105px;
@@ -122,6 +117,7 @@ footer {
   /* searchbar/logo*/
 header {
     /* display: flex; */
+    padding-bottom: 25px;
     flex-flow: row wrap;
     justify-content: center;
     background-color: #0984e3;
@@ -135,8 +131,9 @@ header {
     box-shadow: 0px 0px 8px rgba(0,0,0,.6);
   }
 img { 
-    height: 90px;
-    width: auto;
+  height: 110px;
+  width: auto;
+  margin-left: 30px;
 }
 p {
   font-weight: 400;
@@ -185,10 +182,20 @@ button{
   font-size: 14pt;
   font-family: 'Michroma', sans-serif;
   background-color: rgba(45, 52, 54,1.0); 
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+
   color: white;
   margin-left: 2px;
   margin-bottom: 5px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
 }
+#search-btn:hover, #nameButton:hover {
+  color: black;
+  background: white;
+  border: 2px solid black;
+}
+
 label {
   color: white;
 }
@@ -196,10 +203,4 @@ label {
 #linkedin{
   height: 20px;
   width: 80px;
-}
-.about{
-  border:rgba(116, 185, 255,1.0) 1px solid;
-  width: 50%;
-  padding: 10px;
-  font-size: 8pt;
 }
