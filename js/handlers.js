@@ -349,10 +349,11 @@ async function searchRender(req,res) {
 ////////////////////////////////////////////////////////////////////////
 // function for adding a company to a portfolio
 ////////////////////////////////////////////////////////////////////////
-function addPortfolio(req, res) {
+function addPortfolio(userID) {
   console.log(req);
   db.addPortfolio(req.body.userID, req.body.coID)
     .then(result => {
+
       console.log(result.rows);
     })
 }
