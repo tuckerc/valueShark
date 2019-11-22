@@ -101,13 +101,16 @@ body {
     margin-bottom: 25px;
   }
   input {
-    width: 200px;
+    width: 400px;
     font-size: 16pt;
     padding: 10px;
     border: none;
     box-shadow: none;
-    background-color: #dfe6e9;
+    /* background-color: #dfe6e9; */
 
+  }
+  #search-btn {
+    width: 105px;
   }
 
 }
@@ -177,7 +180,8 @@ button{
   margin-left: 25px;
   margin-bottom: 10px;
 }
-#search-btn {
+
+#search-btn, #nameButton {
   font-size: 14pt;
   font-family: 'Michroma', sans-serif;
   background-color: rgba(45, 52, 54,1.0); 
@@ -194,13 +198,13 @@ label {
   border: solid gray 1px;
   font-size: 10pt;
   color: black;
-
+}
 #linkedin{
   height: 20px;
   width: 80px;
 }
 .about{
-  border: rgb(10, 9, 111) 1px solid;
+  border:rgba(116, 185, 255,1.0) 1px solid;
   width: 50%;
   padding: 10px;
 }
