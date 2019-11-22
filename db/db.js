@@ -70,8 +70,8 @@ async function updateCompanyData(company) {
 ////////////////////////////////////////////////////////////////////
 // function to add a company to a portfolio
 ////////////////////////////////////////////////////////////////////
-function addPortflio(userID, companyID) {
-  let sql = 'insert into portfolios (id, company_id) values ($1, $2) returning *';
+function addNewStock(userID, companyID) {
+  let sql = 'insert into portfolios (id, ticker) values ($1, $2) returning *';
   let values = [userID, companyID];
   return client.query(sql, values);
 }
@@ -108,8 +108,7 @@ function updatePortfolio(userID, companyID, shares, avgCost) {
 // function to pull portfolio data for user
 ///////////////////////////////////////////////////////////////////
 function getPortfolio(userID) {
-  console.log('userID passed to getPortfolio: ', userID);
-  let sql = 'select users.id as userID, users.name as userName, portfolios.shares, portfolios.av_cost, companies.name as companyName, companies.ticker, company_data.price from users left outer join portfolios on users.id = portfolios.id left outer join companies on portfolios.company_id = companies.id left outer join company_data on companies.ticker = company_data.ticker where users.id = $1';
+  let sql = 'select users.id as userID, users.name as userName, portfolios.shares, portfolios.av_cost, companies.name as companyName, companies.ticker, company_data.price from users left outer join portfolios on users.id = portfolios.id left outer join companies on portfolios.ticker = companies.ticker left outer join company_data on companies.ticker = company_data.ticker where users.id = $1';
   const uID = String(userID);
   let values = [uID];
   return client.query(sql, values);
@@ -121,7 +120,7 @@ exports.getCompanies = getCompanies;
 exports.updateCompanyData = updateCompanyData;
 exports.addUser = addUser;
 exports.authUser = authUser;
-exports.addPortflio = addPortflio;
+exports.addNewStock = addNewStock;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;

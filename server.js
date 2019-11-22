@@ -36,7 +36,7 @@ app.post('/', handlers.loginHandler);
 app.get('/home', handlers.indexRender);
 app.post('/search', handlers.searchRender);
 app.get('/about', handlers.information);
-app.get('/addPortfolio', handlers.addPortfolio);
+app.post('/addPortfolio', handlers.addPortfolio);
 app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
 app.put('/updatePortfolio', handlers.updatePortfolio);
 app.get('/deletePortfolio', handlers.deletePortfolio);

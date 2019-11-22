@@ -216,7 +216,6 @@ async function updateCoFinData() {
 // function to render login screen
 /////////////////////////////////////////////////
 function renderLogin(req, res) {
-  console.log('in render login');
   res.render('pages/login');
 }
 
@@ -224,8 +223,6 @@ function renderLogin(req, res) {
 // function to pull data for portfolio and table
 //////////////////////////////////////////////////
 async function pullData(userID) {
-  
-  console.log('userID passed to pullData: ', userID);
   
   let results = {};
   
@@ -247,18 +244,7 @@ async function pullData(userID) {
   const getTableDataResult = await getTableData;
   getTableDataResult;
 
-  console.log('results before returning');
   return results;
-  // return new Promise((resolve, reject) => {
-  //   return results;
-  //   // resolve('render');
-  //   // reject('no render');
-  // });
-  
-  // const renderResult = await render;
-  // console.log('renderResult in pullData: ', renderResult);
-  // return renderResult;
-
 }
 
 /////////////////////////////////////////////////////////////
@@ -266,6 +252,7 @@ async function pullData(userID) {
 /////////////////////////////////////////////////////////////
 async function indexRender(req,res) {
   let results = {};
+
   // get portfolio and table data
   const query = await pullData(req.query.userID);
   const result = query;
@@ -273,8 +260,9 @@ async function indexRender(req,res) {
   results.portfolio = result.portfolio;
   results.table = result.table;
 
-  const searchRender = await res.render('index', results);
-  searchRender;
+  console.log(results);
+
+  res.render('index', results);
 }
 
 /////////////////////////////////////////////////////
@@ -294,7 +282,6 @@ async function searchSymbol(ticker) {
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
-      console.log(result.body);
       symbol = new Symbol(result.body);
     })
     .catch(err => errorHandler(err));
@@ -314,6 +301,7 @@ async function searchRender(req,res) {
   // get search results
   const searchQuery = await searchSymbol(req.body.symbolField);
   results.symbol = searchQuery;
+  results.symbol.userID = req.body.userID;
 
   // get portfolio data
   const getPortfolioQuery = await db.getPortfolio(req.body.userID)
@@ -325,21 +313,19 @@ async function searchRender(req,res) {
   const getPortfolioResult = getPortfolioQuery;
   getPortfolioResult;
 
-  console.log('results before rendering pages/search: ', results);
-
-  const searchRender = await res.render('pages/search', results);
-  searchRender;
+  res.render('pages/search', results);
 }
 
 ////////////////////////////////////////////////////////////////////////
 // function for adding a company to a portfolio
 ////////////////////////////////////////////////////////////////////////
 function addPortfolio(req, res) {
-  console.log(req);
-  db.addPortfolio(req.body.userID, req.body.coID)
+  db.addNewStock(req.body.userID, req.body.ticker)
     .then(result => {
       console.log(result.rows);
+      res.render('/home' + req.body.userID);
     })
+    .catch(err => (err, res, req));
 }
 
 ////////////////////////////////////////////////////////
