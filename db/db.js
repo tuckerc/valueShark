@@ -49,13 +49,6 @@ function getCompanies() {
   let sql = 'select * from companies';
   return client.query(sql);
 }
-//////////////////////////////////////////////////
-// Function to get data for Date Table
-//////////////////////////////////////////////////
-function getTable() {
-  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
-  return client.query(SQL);
-}
 
 
 /////////////////////////////////////////////////

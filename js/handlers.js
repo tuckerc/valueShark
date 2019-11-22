@@ -11,7 +11,6 @@ const db = require('../db/db.js');
 // Constructors
 /////////////////////////////////////////////////
 function Symbol(data) {
-  console.log('symbol data: ', data);
   this.symbol = data.symbol;
   if(data.financialData.currentPrice)
     this.price = data.financialData.currentPrice.fmt;
@@ -60,7 +59,6 @@ function loginHandler(req, res) {
       if(result.rowCount) {
         // pull portfolio
         // res.render('index');
-        res.redirect('/home')
         res.redirect('/home?userID=' + user.id);
       }
       else {
@@ -305,21 +303,21 @@ function renderPortfolioUpdate(req, res) {
 // function to search for single ticker
 /////////////////////////////////////////////////
 async function searchSymbol(ticker) {
+  let symbol = {};
 
-  console.log('ticker in search symbol: ', ticker);
-  
-  const query = superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
+  const tickerQuery = await superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
-      console.log('searchSymbol result: ', result.body);
-      const symbol = new Symbol(result.body);
-     return symbol;
+      console.log(result.body);
+      symbol = new Symbol(result.body);
     })
     .catch(err => errorHandler(err));
 
-  const result = await query;
-  result;
+  const tickerResult = tickerQuery;
+  tickerResult;
+
+  return symbol;
 }
 
 /////////////////////////////////////////////////////////////
@@ -329,16 +327,20 @@ async function searchRender(req,res) {
   let results = {};
 
   // get search results
-  results.symbol = searchSymbol(req.body.symbolField);
+  const searchQuery = await searchSymbol(req.body.symbolField);
+  results.symbol = searchQuery;
 
-  console.log('first query results ', results);
+  // get portfolio data
+  const getPortfolioQuery = await db.getPortfolio(req.body.userID)
+    .then(result => {
+      results.portfolio = result.rows;
+    })
+    .catch(err => errorHandler(err));
 
-  console.log('req.body ', req.query)
+  const getPortfolioResult = getPortfolioQuery;
+  getPortfolioResult;
 
-  // get portfolio and table data
-  const dataResults = pullData(req.query.userID);
-  results.portfolio = dataResults.portfolio;
-  results.table = dataResults.table;
+  console.log('results before rendering pages/search: ', results);
 
   const searchRender = await res.render('pages/search', results);
   searchRender;
