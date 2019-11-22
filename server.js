@@ -37,7 +37,7 @@ app.get('/home',handlers.getTable);
 app.post('/home', handlers.getTable);
 app.post('/search', handlers.searchRender);
 app.get('/about', handlers.information);
-app.get('/addPortfolio', handlers.addPortfolio);
+app.post('/addPortfolio', handlers.addPortfolio);
 app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
 app.put('/updatePortfolio', handlers.updatePortfolio);
 app.get('/deletePortfolio', handlers.deletePortfolio);
@@ -59,4 +59,4 @@ schedule.scheduleJob('* * 0 * * *', handlers.updateCoFinData);
 
 // handlers.updateCompanyData();
 
-// handlers.updateCoFinData();
+handlers.updateCoFinData();
