@@ -1,0 +1,27 @@
+ <main id="table">
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Ticker</th>
+    <th>Price</th>
+    <th>P/E</th>
+    <th>PEG</th>
+    <th>Profit Margin</th>
+    <th>PB</th>
+    <th>Market Cap</th>
+  </tr>
+  
+  <% table.forEach(stock => { %>
+    <tr>
+    <td> <%= stock.name %></td>
+    <td> <%= stock.ticker %></td>
+    <td> <%= stock.price %></td>
+    <td> <%= stock.pe %></td>
+    <td> <%= stock.peg %></td>
+    <td> <%= stock.profit_margin %></td>
+    <td> <%= stock.pb %></td>
+    <td> <%= stock.market_cap %></td>
+    <% }); %>
+    </tr> 
+</table>
+</main>

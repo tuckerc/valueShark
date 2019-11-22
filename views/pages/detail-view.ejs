@@ -1,5 +1,16 @@
-<%- include('../partials/header'); -%>
 
-<%- include('../partials/searchbar'); -%>
+<%- include('partials/head'); -%>
+<%- include('partials/header'); -%>
+<div class="main">
+  <div id= "extraData">
+      <li><span>Name: </span><%= name %></li>
+      <li><span>Symbol: </span><%= ticker %></li>
+      <li><span>Description: </span><%= description %></li>
+      <li><span>Industry: </span><%= industry %></li>
+      
+  </div>
+  <%- include('partials/portfolio'); -%>
+</div>
 
-<%- include('../partials/footer'); -%>
+
+<%- include('partials/footer'); -%>
