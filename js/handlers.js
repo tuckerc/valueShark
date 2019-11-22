@@ -218,6 +218,7 @@ async function updateCoFinData() {
 // function to render login screen
 /////////////////////////////////////////////////
 function renderLogin(req, res) {
+  console.log('in render login');
   res.render('pages/login');
 }
 
