@@ -193,12 +193,6 @@ label {
   color: white;
 }
 
-.linkedin{
-  background: whitesmoke;
-  border: solid gray 1px;
-  font-size: 10pt;
-  color: black;
-}
 #linkedin{
   height: 20px;
   width: 80px;
@@ -207,4 +201,5 @@ label {
   border:rgba(116, 185, 255,1.0) 1px solid;
   width: 50%;
   padding: 10px;
+  font-size: 8pt;
 }
