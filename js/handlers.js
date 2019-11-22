@@ -280,7 +280,7 @@ async function searchSymbol(ticker) {
 
   const tickerQuery = await superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
-    .set('x-rapidapi-key', process.env.RAPID_API_KEY)
+    .set('x-rapidapi-key', '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030')
     .then( result => {
       symbol = new Symbol(result.body);
     })
