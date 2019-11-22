@@ -76,6 +76,8 @@
 #portfolio-bar {
   background-color: #0984e3;
   color: black;
+  /* font-family: 'Michroma', sans-serif;
+  font-size: 8pt; */
 }
 hr {
   margin: 0;
@@ -147,8 +149,6 @@ hr {
   color: white;
   padding: 25px;
   margin-top: 0px;
-
-
 }
 #loginForm {
   margin: 0 auto;
