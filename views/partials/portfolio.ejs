@@ -7,11 +7,14 @@
   <% portfolio.forEach(result => { %>
     <h3><%= result.companyName %></h3>
     <p><%= result.ticker %></p>
-    <p>Price: <%= result.price %></p>
-    <p>Average Cost: <%= result.av_cost %></p>
-    <p>Shares Owned: <%= result.shares %></p>
-    <a class="portfolio-item" href="/updatePortfolio">Update</a>
-    <a class='portfolio-item' href='/deletePortfolio'>Delete</a>
+    <p><span class="porfolio-data">Price:</span> <%= result.price %></p>
+    <p><span class="porfolio-data">Average Cost:</span> <%= result.av_cost %></p>
+    <p><span class="porfolio-data">Shares Owned:</span> <%= result.shares %></p>
+    <div id="btn-group">
+        <a class="portfolio-btn" href="/updatePortfolio">Update</a>
+        <a class='portfolio-btn' href='/deletePortfolio'>Delete</a>
+    </div>
+    
   <% }) %>
 </aside>
 
