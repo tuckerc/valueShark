@@ -12,6 +12,7 @@ const db = require('../db/db.js');
 // Constructors
 /////////////////////////////////////////////////
 function Symbol(data) {
+  console.log('symbol data: ', data);
   this.symbol = data.symbol;
   if(data.financialData.currentPrice)
     this.price = data.financialData.currentPrice.fmt;
@@ -222,13 +223,15 @@ function renderLogin(req, res) {
 }
 
 //////////////////////////////////////////////////
-// function to render home screen
+// function to pull data for portfolio and table
 //////////////////////////////////////////////////
-async function pullData() {
+async function pullData(userID) {
+  
+  console.log('userID passed to pullData: ', userID);
   
   let results = {};
   
-  const getPortfolioQuery = db.getPortfolio(req.query.userID)
+  const getPortfolioQuery = db.getPortfolio(userID)
     .then(result => {
       results.portfolio = result.rows;
     })
@@ -236,8 +239,6 @@ async function pullData() {
 
   const getPortfolioResult = await getPortfolioQuery;
   getPortfolioResult;
-
-  console.log('after first await: ', results);
 
   const getTableData = db.getTable()
       .then(result => {
@@ -248,20 +249,35 @@ async function pullData() {
   const getTableDataResult = await getTableData;
   getTableDataResult;
 
-  console.log('after second await ', results);
-
-  const render = new Promise((resolve, reject) => {
-    console.log('last before render ', results);
-    return results;
-    resolve('render');
-    reject('no render');
-  });
+  console.log('results before returning');
+  return results;
+  // return new Promise((resolve, reject) => {
+  //   return results;
+  //   // resolve('render');
+  //   // reject('no render');
+  // });
   
-  const renderResult = await render;
-  renderResult;
+  // const renderResult = await render;
+  // console.log('renderResult in pullData: ', renderResult);
+  // return renderResult;
 
 }
 
+/////////////////////////////////////////////////////////////
+// function to render search view
+/////////////////////////////////////////////////////////////
+async function indexRender(req,res) {
+  let results = {};
+  // get portfolio and table data
+  const query = await pullData(req.query.userID);
+  const result = query;
+  result;
+  results.portfolio = result.portfolio;
+  results.table = result.table;
+
+  const searchRender = await res.render('index', results);
+  searchRender;
+}
 
 /////////////////////////////////////////////////////
 // function for rendering the portfolio update page
@@ -273,22 +289,44 @@ function renderPortfolioUpdate(req, res) {
 /////////////////////////////////////////////////
 // function to search for single ticker
 /////////////////////////////////////////////////
-function searchSymbol(ticker) {
+async function searchSymbol(ticker) {
 
-  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
+  console.log('ticker in search symbol: ', ticker);
+  
+  const query = superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
+      console.log('searchSymbol result: ', result.body);
       const symbol = new Symbol(result.body);
      return symbol;
     })
     .catch(err => errorHandler(err));
+
+  const result = await query;
+  result;
 }
 
-function searchRender(req,res) {
+/////////////////////////////////////////////////////////////
+// function to render search view
+/////////////////////////////////////////////////////////////
+async function searchRender(req,res) {
   let results = {};
 
+  // get search results
   results.symbol = searchSymbol(req.body.symbolField);
+
+  console.log('first query results ', results);
+
+  console.log('req.body ', req.query)
+
+  // get portfolio and table data
+  const dataResults = pullData(req.query.userID);
+  results.portfolio = dataResults.portfolio;
+  results.table = dataResults.table;
+
+  const searchRender = await res.render('pages/search', results);
+  searchRender;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -376,3 +414,5 @@ exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
 exports.renderLogin = renderLogin;
+exports.searchRender = searchRender;
+exports.indexRender = indexRender;

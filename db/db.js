@@ -125,8 +125,10 @@ function updatePortfolio(userID, companyID, shares, avgCost) {
 // function to pull portfolio data for user
 ///////////////////////////////////////////////////////////////////
 function getPortfolio(userID) {
-  let sql = 'select * from users inner join portfolios on users.id = portfolios.id where users.id = $1';
-  let values = [userID];
+  console.log('userID passed to getPortfolio: ', userID);
+  let sql = 'select users.id as userID, users.name as userName, portfolios.shares, portfolios.av_cost, companies.name as companyName, companies.ticker, company_data.price from users left outer join portfolios on users.id = portfolios.id left outer join companies on portfolios.company_id = companies.id left outer join company_data on companies.ticker = company_data.ticker where users.id = $1';
+  const uID = String(userID);
+  let values = [uID];
   return client.query(sql, values);
 }
 
