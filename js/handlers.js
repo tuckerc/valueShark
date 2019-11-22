@@ -6,7 +6,6 @@
 const superagent = require('superagent');
 const request = require('request');
 const db = require('../db/db.js');
-
 /////////////////////////////////////////////////
 // Constructors
 /////////////////////////////////////////////////
@@ -173,7 +172,7 @@ function searchSymbol(req, res) {
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.render('index', symbol);
+      res.render('pages/search', symbol);
     })
     .catch(err => errorHandler(err, req, res));
 }

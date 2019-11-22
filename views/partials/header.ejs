@@ -1,4 +1,25 @@
 <div class="wrapper">
 <header>
-    <img src="../img/valueSharkDark.jpg" alt="logo">
+    <nav>
+        <div class="left">
+            <img id="logo" src="../img/valueShark.png" alt="logo">
+        </div>
+        <div class="right">
+            <div class="topnav" id="myTopnav">
+                <a href="/" class="active">Home</a>
+                <a href="#news">News</a>
+                <a href="/about">About</a>
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <div id="searchRight">
+                    <%- include('searchbar'); -%>
+                </div>
+                
+            </div>
+            
+        </div>
+    </nav>
+    
+    
 </header>

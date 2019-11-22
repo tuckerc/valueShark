@@ -13,7 +13,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const handlers = require('./js/handlers.js');
-// const pg = require('pg')
+const pg = require('pg');
+
 
 ////////////////////////////////////////////////
 // Application Configuration
@@ -47,5 +48,4 @@ app.listen(PORT, () => {
 
 // update company data every month on the first day at midnight
 schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
-
 // handlers.updateCoFinData();
