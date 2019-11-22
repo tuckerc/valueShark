@@ -7,7 +7,6 @@ const superagent = require('superagent');
 const request = require('request');
 const uuidv5 = require('uuid/v5');
 const db = require('../db/db.js');
-
 /////////////////////////////////////////////////
 // Constructors
 /////////////////////////////////////////////////
