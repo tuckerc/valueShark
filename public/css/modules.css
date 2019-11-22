@@ -10,6 +10,7 @@
 
 .topnav {
   overflow: hidden;
+  margin-right: 50px;
   /* background-color: #333; */
 }
 
@@ -65,7 +66,36 @@
   }
 }
 
-
+#search-results {
+  margin-left: 75px;
+}
+#title {
+  text-align: center;
+  font-size: 2em;
+  font-family:  'Michroma', sans-serif;
+  margin: 20px;
+}
+.about  {
+  padding: 25px;
+  width: 700px;
+  height: 400px;
+  float: left;
+  margin: 20px;
+  background-color: white;
+  border:rgba(116, 185, 255,1.0) 2px solid;
+  font-size: 8pt;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+.people {
+  width: 150px;
+  height: 150px;
+}
+#about-page {
+  /* margin: 0 auto; */
+  height: 100vh;
+  margin-left: 180px;
+  margin-bottom: 50px;
+}
 
 
 .aside {
@@ -186,9 +216,10 @@ hr {
 }
 table {
   font-family: 'Michroma', sans-serif;
-  font-size: 12pt;
+  font-size: 13pt;
   border-collapse: collapse;
-  width: 100%;
+  width: 65vw;
+  margin: 20px auto;
 }
 
 td, th {
