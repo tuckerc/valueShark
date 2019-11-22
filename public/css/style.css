@@ -84,11 +84,11 @@ body {
 @media all and (min-width: 768px) {
   .main    { flex: 3 0px; }
   #portfolio-bar { 
-    order: 2;
+    order: 1;
     width: 360px;
    } 
   .main    { 
-    order: 1;
+    order: 2;
     height: 100vh;
    }
   footer  { 
@@ -101,13 +101,18 @@ body {
     margin-bottom: 25px;
   }
   input {
-    width: 200px;
+    width: 400px;
     font-size: 16pt;
     padding: 10px;
     border: none;
     box-shadow: none;
-    background-color: #dfe6e9;
+    /* background-color: #dfe6e9; */
+
   }
+  #search-btn {
+    width: 105px;
+  }
+
 }
 footer {
   height: 80px;
@@ -175,7 +180,8 @@ button{
   margin-left: 25px;
   margin-bottom: 10px;
 }
-#search-btn {
+
+#search-btn, #nameButton {
   font-size: 14pt;
   font-family: 'Michroma', sans-serif;
   background-color: rgba(45, 52, 54,1.0); 
@@ -192,8 +198,8 @@ label {
   width: 80px;
 }
 .about{
-  font-size: 8pt;
-  border: rgb(9,132,227) 1px solid;
+  border:rgba(116, 185, 255,1.0) 1px solid;
   width: 50%;
   padding: 10px;
+  font-size: 8pt;
 }

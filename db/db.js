@@ -80,7 +80,7 @@ function addPortflio(userID, companyID) {
 // Function to get data for Date Table
 //////////////////////////////////////////////////
 function getTable(req, res) {
-  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE company_data.peg > 0 and CAST(RTRIM(company_data.profit_margin, '%') as FLOAT) > 15 ORDER BY company_data.peg limit 10';
+  let SQL = "select * from companies inner join company_data on companies.ticker = company_data.ticker where company_data.peg > 0 and cast(rtrim(company_data.profit_margin, ' % ') as float) > 15 order by company_data.peg limit 10";
   return client.query(SQL);
     
 }

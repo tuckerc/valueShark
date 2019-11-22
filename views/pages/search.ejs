@@ -1,28 +1,25 @@
 <%- include('../partials/head'); -%>
 <%- include('../partials/header'); -%>
 
-
-
-
 <div class="main"> 
- 
+<%- include('../partials/searchbar'); -%>
   <h1 id="page-title">  Search Results </h1>
   <div id="searchResults">
     <!-- for each result render the data -->
-      <h1 id="company-name"><%= name %></h1>
-      <p id="symbol"><span>Symbol: &nbsp;</span><%= symbol %></p>
-      <p><span>Price: &nbsp;</span><%= price %></p>
-      <p><span>P/E: &nbsp;</span><%= pe %></p>
-      <p><span>PEG: &nbsp;</span><%= peg %></p>
-      <p><span>Profit Margin: &nbsp;</span><%= profitMargin %></p>
-      <p><span>Market Cap: &nbsp;</span><%= marketCap %></p>
-      <p><span>PB: &nbsp;</span><%= pb %></p>
-    <form id="add-profile" action="/portfolio" method="POST">
-      
+      <h1 id="company-name"><%= symbol.name %></h1>
+      <p id="symbol"><span>Symbol: &nbsp;</span><%= symbol.symbol %></p>
+      <p><span>Price: &nbsp;</span><%= symbol.price %></p>
+      <p><span>P/E: &nbsp;</span><%= symbol.pe %></p>
+      <p><span>PEG: &nbsp;</span><%= symbol.peg %></p>
+      <p><span>Profit Margin: &nbsp;</span><%= symbol.profitMargin %></p>
+      <p><span>Market Cap: &nbsp;</span><%= symbol.marketCap %></p>
+      <p><span>PB: &nbsp;</span><%= symbol.pb %></p>
+    <form id="add-profile" action="/addPortfolio" method="POST">
+      <input type='hidden' name='coID' value=<%= symbol.
       <button id="addButton" type="submit"> <img class="icons" src="../img/stock.png" alt="logo">Add To Portfolio</button>
     </form>
   </div>
+  <%- include('../partials/portfolio'); -%>
 </div>
-<%- include('../partials/portfolio'); -%>
 
 <%- include('../partials/footer'); -%>
