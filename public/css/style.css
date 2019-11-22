@@ -187,19 +187,12 @@ label {
   color: white;
 }
 
-.linkedin{
-  background: whitesmoke;
-  border: solid gray 1px;
-  font-size: 10pt;
-  color: black;
-}
-
 #linkedin{
   height: 20px;
   width: 80px;
 }
 .about{
-  font-size: 10pt;
+  font-size: 8pt;
   border: rgb(9,132,227) 1px solid;
   width: 50%;
   padding: 10px;
