@@ -20,24 +20,31 @@ const pg = require('pg');
 // Application Configuration
 ////////////////////////////////////////////////
 const app = express();
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 const PORT = process.env.PORT || 3000;
-
+app.set('view engine', 'ejs');
 
 ////////////////////////////////////////////////
 // Routes
 ////////////////////////////////////////////////
 app.use(express.static('./public'));
-app.set('view engine', 'ejs');
 
-app.get('/', handlers.newSearch);
+// route for Home-Page
+app.get('/', handlers.renderLogin);
+app.post('/', handlers.loginHandler);
+app.get('/home',handlers.getTable);
+app.post('/home', handlers.getTable);
+app.get('/home', handlers.pullData);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
+app.get('/addPortfolio', handlers.addPortfolio);
+app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
+app.put('/updatePortfolio', handlers.updatePortfolio);
+app.get('/deletePortfolio', handlers.deletePortfolio);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 
-// app.get('/about', handlers.information);
 
 ////////////////////////////////////////////////
 // Initiation
@@ -48,4 +55,9 @@ app.listen(PORT, () => {
 
 // update company data every month on the first day at midnight
 schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
+
+schedule.scheduleJob('* * 0 * * *', handlers.updateCoFinData);
+
+// handlers.updateCompanyData();
+
 // handlers.updateCoFinData();

@@ -148,6 +148,7 @@ hr {
   padding: 25px;
   margin-top: 0px;
 
+
 }
 
 @media all and (max-width: 600px) {
@@ -179,4 +180,23 @@ hr {
 }
 #addButton:hover {
   background-color: rgba(116, 185, 255,1.0);
+
+table {
+  font-family: 'Roboto Condensed', sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 2px solid rgb(10,9,111);
+  text-align: left;
+  padding: 8px;
+}
+th {
+  font-family: 'Roboto', sans-serif;
+}
+
+tr:nth-child(1) {
+  background-color:rgb(84,83,155);
+  color: white;
 }

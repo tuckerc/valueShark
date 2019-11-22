@@ -30,6 +30,14 @@ body {
     overflow: scroll;
     height: 100vh;
     width: 100%;
+    color: honeydew;
+    font-size: 20;
+  }
+  #about{
+    display: flex;
+    color: honeydew;
+    font-size: 20;
+    justify-self:  right;
   }
   .aside { 
     flex: 1 0 0;
@@ -186,4 +194,13 @@ label {
   border: solid gray 1px;
   font-size: 10pt;
   color: black;
+
+#linkedin{
+  height: 20px;
+  width: 80px;
+}
+.about{
+  border: rgb(10, 9, 111) 1px solid;
+  width: 50%;
+  padding: 10px;
 }

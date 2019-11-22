@@ -1,6 +1,7 @@
-
 <%- include('partials/head'); -%>
 <%- include('partials/header'); -%>
+
+<%- include('partials/searchbar'); -%>
 <div class="main">
   <div id="searchResults">
     <!-- for each result render the data -->
@@ -15,8 +16,8 @@
       <li><span>PB: </span><%= pb %></li>
     </ul>
   </div>
-  <%- include('partials/portfolio'); -%>
 </div>
+<%- include('partials/portfolio-edit-partials'); -%>
 
 
 <%- include('partials/footer'); -%>
