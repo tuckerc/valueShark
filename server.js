@@ -34,7 +34,7 @@ app.get('/', handlers.renderLogin);
 app.post('/', handlers.loginHandler);
 app.get('/home', handlers.indexRender);
 app.get('/home',handlers.getTable);
-app.get('/home', handlers.getTable);
+app.post('/home', handlers.getTable);
 app.post('/search', handlers.searchRender);
 app.get('/about', handlers.information);
 app.get('/addPortfolio', handlers.addPortfolio);
