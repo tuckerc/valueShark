@@ -41,6 +41,7 @@ app.get('/addPortfolio', handlers.addPortfolio);
 app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
 app.put('/updatePortfolio', handlers.updatePortfolio);
 app.get('/deletePortfolio', handlers.deletePortfolio);
+app.get('/details', handlers.renderDetails);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 

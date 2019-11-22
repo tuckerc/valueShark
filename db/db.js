@@ -53,7 +53,7 @@ function getCompanies() {
 // Function to get data for Date Table
 //////////////////////////////////////////////////
 function getTable() {
-  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE company_data.peg > 0 and CAST (rTRIM (company_data.profit_margin, '%') as float) >15 ORDER BY company_data.peg LIMIT 10';
   return client.query(SQL);
 }
 
@@ -83,8 +83,18 @@ function addPortflio(userID, companyID) {
   return client.query(sql, values);
 }
 
+////////////////////////////////////////////////
+//////DETAIL-VIEW
+/////////////////////////////////////////////////
+function getDetails(ticker) {
+  let sql = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE companies.ticker = $1';
+  let values = [ticker];
+  return client.query(sql, values);
+}
+
+
 //////////////////////////////////////////////////
-// Function to get data for Date Table
+// Function to get data for Data Table
 //////////////////////////////////////////////////
 function getTable(req, res) {
   let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg BETWEEN 0 and 1 ORDER BY profit_margin DESC LIMIT 10;';
@@ -131,3 +141,4 @@ exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
 exports.getPortfolio = getPortfolio;
+exports.getDetails = getDetails;

@@ -60,7 +60,7 @@ function loginHandler(req, res) {
       if(result.rowCount) {
         // pull portfolio
         // res.render('index');
-        res.redirect('/home')
+        res.redirect('/')
         res.redirect('/home?userID=' + user.id);
       }
       else {
@@ -290,6 +290,18 @@ function searchRender(req,res) {
 
   results.symbol = searchSymbol(req.body.symbolField);
 }
+////////////////////////////////////////////////
+//////DETAIL-VIEW
+/////////////////////////////////////////////////
+function renderDetails(req, res) {
+  db.renderDetails(req.body.ticker)
+  .then(result => {
+    console.log(result);
+    // ourDetail.
+  }
+  )
+res.render('pages/detail-view')
+  }
 
 ////////////////////////////////////////////////////////////////////////
 // function for adding a company to a portfolio
@@ -376,4 +388,4 @@ exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
 exports.renderLogin = renderLogin;
-
+exports.renderDetails = renderDetails;
