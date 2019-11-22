@@ -13,7 +13,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const handlers = require('./js/handlers.js');
-// const pg = require('pg')
+const pg = require('pg');
+
 
 ////////////////////////////////////////////////
 // Application Configuration
