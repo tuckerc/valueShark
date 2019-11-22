@@ -29,8 +29,8 @@ async function addUser(user) {
   // add new user
   let sql = 'INSERT INTO users (name, id) VALUES ($1, $2) returning *';
   let values = [user.name, user.id];
-  
-  return client.query(sql,values);
+
+  return client.query(sql, values);
 }
 
 ////////////////////////////////////////////////
@@ -57,6 +57,18 @@ function getTable() {
   return client.query(SQL);
 }
 
+
+/////////////////////////////////////////////////
+//////DETAIL-VIEW
+/////////////////////////////////////////////////
+// function getDetails(ticker) {
+//   let sql = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE companies.ticker = $1';
+//   let values = [ticker];
+  
+//   return client.query(sql, values);
+// }
+
+
 //////////////////////////////////////////////////
 // Function to update company financial data
 //////////////////////////////////////////////////
@@ -66,7 +78,7 @@ async function updateCompanyData(company) {
   const deleteQuery = client.query(sql, values);
   const deleteResult = await deleteQuery;
   deleteResult;
-  
+
   sql = 'insert into company_data (ticker, price, pe, pb, peg, profit_margin, market_cap) values ($1, $2, $3, $4, $5, $6, $7) returning *';
   values = [company.ticker, company.price, company.pe, company.pb, company.peg, company.profitMargin, company.marketCap];
   const updateQuery = client.query(sql, values);
@@ -121,3 +133,4 @@ exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
 exports.getPortfolio = getPortfolio;
+// exports.getDetails = getDetails;

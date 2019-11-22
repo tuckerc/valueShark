@@ -36,6 +36,7 @@ app.get('/home', handlers.pullData);
 app.post('/search', handlers.searchSymbol);
 app.get('/about', handlers.information);
 app.get('/addPortfolio', handlers.addPortfolio);
+// app.get('/details', handlers.renderDetails);
 app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
 app.put('/updatePortfolio', handlers.updatePortfolio);
 app.get('/deletePortfolio', handlers.deletePortfolio);

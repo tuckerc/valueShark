@@ -217,6 +217,21 @@ function renderLogin(req, res) {
   res.render('pages/login');
 }
 
+
+/////////////////////////////////////////////////
+//////DETAIL-VIEW
+/////////////////////////////////////////////////
+// function renderDetails(req, res) {
+//   let ourDetail = {};
+//   db.renderDetails(req.body.ticker)
+//   .then(result => {
+//     console.log('yoooooooooo', result);
+//     ourDetail.company = result.rows;
+//   }
+//   )
+// res.render('pages/detail-view')
+//   }
+
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
@@ -297,6 +312,7 @@ function addPortfolio(req, res) {
     })
 }
 
+
 ////////////////////////////////////////////////////////
 // function for deleting a company from user portfolio
 ////////////////////////////////////////////////////////
@@ -358,3 +374,4 @@ exports.updatePortfolio = updatePortfolio;
 exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
 exports.renderLogin = renderLogin;
+// exports.renderDetails = renderDetails;
