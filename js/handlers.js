@@ -60,7 +60,6 @@ function loginHandler(req, res) {
       if(result.rowCount) {
         // pull portfolio
         // res.render('index');
-        res.redirect('/home')
         res.redirect('/home?userID=' + user.id);
       }
       else {
