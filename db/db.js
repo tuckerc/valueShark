@@ -81,7 +81,7 @@ function addPortflio(userID, companyID) {
 // Function to get data for Date Table
 //////////////////////////////////////////////////
 function getTable(req, res) {
-  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg BETWEEN 0 and 1 ORDER BY profit_margin DESC LIMIT 10;';
   return client.query(SQL);
     
 }

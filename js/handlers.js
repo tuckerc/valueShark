@@ -271,7 +271,7 @@ function deletePortfolio(req, res) {
 // function for getting table
 ////////////////////////////////////////////////////////
 function getTable(req, res) {
-  // console.log(req);
+  // console.log(req); 
   db.getTable(req,res)
   .then(result =>{
     // console.log(result);
