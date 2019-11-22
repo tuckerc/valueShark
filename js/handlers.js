@@ -260,7 +260,7 @@ async function indexRender(req,res) {
   results.portfolio = result.portfolio;
   results.table = result.table;
 
-  console.log(results);
+  // console.log(results);
 
   res.render('index', results);
 }
@@ -322,7 +322,7 @@ async function searchRender(req,res) {
 function addPortfolio(req, res) {
   db.addNewStock(req.body.userID, req.body.ticker)
     .then(result => {
-      console.log(result.rows);
+      // console.log(result.rows);
       res.render('/home' + req.body.userID);
     })
     .catch(err => (err, res, req));
