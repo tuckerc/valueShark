@@ -7,7 +7,6 @@ const superagent = require('superagent');
 const request = require('request');
 const uuidv5 = require('uuid/v5');
 const db = require('../db/db.js');
-
 /////////////////////////////////////////////////
 // Constructors
 /////////////////////////////////////////////////
@@ -45,6 +44,7 @@ function User(name, id) {
 }
 
 
+
 //////////////////////////////////////////////////////////
 // function to handle user login
 //////////////////////////////////////////////////////////
@@ -58,6 +58,9 @@ function loginHandler(req, res) {
   db.authUser(user)
     .then(result => {
       if(result.rowCount) {
+        // pull portfolio
+        // res.render('index');
+        res.redirect('/home')
         res.redirect('/home?userID=' + user.id);
       }
       else {
@@ -268,12 +271,8 @@ async function indexRender(req,res) {
   const query = await pullData(req.query.userID);
   const result = query;
   result;
-  console.log('==========================================================================================');
-  console.log(result);
   results.portfolio = result.portfolio;
   results.table = result.table;
-
-  console.log(results);
 
   const searchRender = await res.render('index', results);
   searchRender;
@@ -350,6 +349,18 @@ function deletePortfolio(req, res) {
     console.log(result.rows);
   }) 
 }
+////////////////////////////////////////////////////////
+// function for getting table
+////////////////////////////////////////////////////////
+function getTable(req, res) {
+  // console.log(req);
+  db.getTable(req,res)
+  .then(result =>{
+    // console.log(result);
+    res.render('index', {tableResults: result.rows})
+  })
+  .catch(err => console.log(err))
+}
 
 ////////////////////////////////////////////////////////////////////////
 // function for updating a company in a portfolio
@@ -400,6 +411,7 @@ exports.addPortfolio = addPortfolio;
 exports.updatePortfolio = updatePortfolio;
 exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
+exports.getTable = getTable;
 exports.renderLogin = renderLogin;
 exports.searchRender = searchRender;
 exports.indexRender = indexRender;
