@@ -15,7 +15,8 @@
       <p><span>Market Cap: &nbsp;</span><%= symbol.marketCap %></p>
       <p><span>PB: &nbsp;</span><%= symbol.pb %></p>
     <form id="add-profile" action="/addPortfolio" method="POST">
-      <input type='hidden' name='coID' value= symbol>
+      <input type='hidden' name='ticker' value='<%= symbol.symbol %>'>
+      <input type='hidden' name='userID' value='<%= symbol.userID %>'> 
       <button id="addButton" type="submit"> <img class="icons" src="../img/stock.png" alt="logo">Add To Portfolio</button>
     </form>
   </div>
