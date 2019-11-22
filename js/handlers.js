@@ -53,23 +53,21 @@ function loginHandler(req, res) {
   const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
   const userID = uuidv5(userName, namespace);
 
-  const user = new User(userName, userID);
-
-  console.log(user);
+  const user = new User(userName.toLowerCase(), userID);
 
   db.authUser(user)
     .then(result => {
       if(result.rowCount) {
-        console.log('insideAuthUser')
         // pull portfolio
         // res.render('index');
         res.redirect('/home')
+        res.redirect('/home?userID=' + user.id);
       }
       else {
         // create a user
         db.addUser(user)
           .then(result => {
-            res.render('index');
+            res.redirect('/home?userID=' + user.id);
           })
       }
     })
@@ -216,11 +214,52 @@ async function updateCoFinData() {
   // console.log(tempArr);
 }
 
+/////////////////////////////////////////////////
+// function to render login screen
+/////////////////////////////////////////////////
+function renderLogin(req, res) {
+  res.render('pages/login');
+}
+
 //////////////////////////////////////////////////
 // function to render home screen
 //////////////////////////////////////////////////
-function newSearch(req, res) {
-  res.render('pages/login');
+async function pullData() {
+  
+  let results = {};
+  
+  const getPortfolioQuery = db.getPortfolio(req.query.userID)
+    .then(result => {
+      results.portfolio = result.rows;
+    })
+    .catch(err => errorHandler(err));
+
+  const getPortfolioResult = await getPortfolioQuery;
+  getPortfolioResult;
+
+  console.log('after first await: ', results);
+
+  const getTableData = db.getTable()
+      .then(result => {
+        results.table = result.rows;
+      })
+      .catch(err => errorHandler(err));
+
+  const getTableDataResult = await getTableData;
+  getTableDataResult;
+
+  console.log('after second await ', results);
+
+  const render = new Promise((resolve, reject) => {
+    console.log('last before render ', results);
+    return results;
+    resolve('render');
+    reject('no render');
+  });
+  
+  const renderResult = await render;
+  renderResult;
+
 }
 
 
@@ -234,16 +273,22 @@ function renderPortfolioUpdate(req, res) {
 /////////////////////////////////////////////////
 // function to search for single ticker
 /////////////////////////////////////////////////
-function searchSymbol(req, res) {
+function searchSymbol(ticker) {
 
-  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${req.body.symbolField}`)
+  superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
     .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
     .set('x-rapidapi-key', process.env.RAPID_API_KEY)
     .then( result => {
       const symbol = new Symbol(result.body);
-      res.render('pages/search', symbol);
+     return symbol;
     })
-    .catch(err => errorHandler(err, req, res));
+    .catch(err => errorHandler(err));
+}
+
+function searchRender(req,res) {
+  let results = {};
+
+  results.symbol = searchSymbol(req.body.symbolField);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -317,7 +362,7 @@ function information(req, res) {
 
 
 
-exports.newSearch = newSearch;
+exports.pullData = pullData;
 exports.searchSymbol = searchSymbol;
 exports.information = information;
 exports.notFoundHandler = notFoundHandler;
@@ -330,3 +375,5 @@ exports.updatePortfolio = updatePortfolio;
 exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
+exports.renderLogin = renderLogin;
+

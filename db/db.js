@@ -28,7 +28,7 @@ function addCompany(data) {
 async function addUser(user) {
   // add new user
   let sql = 'INSERT INTO users (name, id) VALUES ($1, $2) returning *';
-  let values = [user.name.toLowerCase(), user.id];
+  let values = [user.name, user.id];
   
   return client.query(sql,values);
 }
@@ -49,8 +49,14 @@ function getCompanies() {
   let sql = 'select * from companies';
   return client.query(sql);
 }
+//////////////////////////////////////////////////
+// Function to get data for Date Table
+//////////////////////////////////////////////////
+function getTable() {
+  let SQL = 'SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 ORDER BY peg LIMIT 10';
+  return client.query(SQL);
+}
 
-// SELECT * FROM companies INNER JOIN company_data ON companies.ticker = company_data.ticker WHERE peg > 0 and CAST('profit_margin" as interger) > 0  ORDER BY peg LIMIT 10;
 //////////////////////////////////////////////////
 // Function to update company financial data
 //////////////////////////////////////////////////
@@ -105,6 +111,15 @@ function updatePortfolio(userID, companyID, shares, avgCost) {
   return client.query(sql, values);
 }
 
+///////////////////////////////////////////////////////////////////
+// function to pull portfolio data for user
+///////////////////////////////////////////////////////////////////
+function getPortfolio(userID) {
+  let sql = 'select * from users inner join portfolios on users.id = portfolios.id where users.id = $1';
+  let values = [userID];
+  return client.query(sql, values);
+}
+
 
 exports.addCompany = addCompany;
 exports.getCompanies = getCompanies;
@@ -115,3 +130,4 @@ exports.addPortflio = addPortflio;
 exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
+exports.getPortfolio = getPortfolio;
