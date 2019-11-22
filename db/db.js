@@ -80,7 +80,7 @@ function addNewStock(userID, companyID) {
 // Function to get data for Date Table
 //////////////////////////////////////////////////
 function getTable(req, res) {
-  let SQL = "select * from companies inner join company_data on companies.ticker = company_data.ticker where company_data.peg > 0 and cast(rtrim(company_data.profit_margin, ' % ') as float) > 15 order by company_data.peg limit 10";
+  let SQL = "select * from companies inner join company_data on companies.ticker = company_data.ticker where company_data.peg > 0 and cast(rtrim(company_data.profit_margin, ' % ') as float) > 15 order by company_data.peg limit 15";
   return client.query(SQL);
     
 }
