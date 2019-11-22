@@ -13,8 +13,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const handlers = require('./js/handlers.js');
-const pg = require('pg');
-
+// const pg = require('pg')
 
 ////////////////////////////////////////////////
 // Application Configuration
@@ -42,7 +41,6 @@ app.get('/addPortfolio', handlers.addPortfolio);
 app.get('/updatePortfolio', handlers.renderPortfolioUpdate);
 app.put('/updatePortfolio', handlers.updatePortfolio);
 app.get('/deletePortfolio', handlers.deletePortfolio);
-app.get('/details', handlers.renderDetails);
 app.use('*', handlers.notFoundHandler);
 app.use(handlers.errorHandler);
 

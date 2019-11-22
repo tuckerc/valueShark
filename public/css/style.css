@@ -84,11 +84,11 @@ body {
 @media all and (min-width: 768px) {
   .main    { flex: 3 0px; }
   #portfolio-bar { 
-    order: 1;
+    order: 2;
     width: 360px;
    } 
   .main    { 
-    order: 2;
+    order: 1;
     height: 100vh;
    }
   footer  { 
@@ -107,9 +107,7 @@ body {
     border: none;
     box-shadow: none;
     background-color: #dfe6e9;
-
   }
-
 }
 footer {
   height: 80px;
@@ -194,13 +192,15 @@ label {
   border: solid gray 1px;
   font-size: 10pt;
   color: black;
+}
 
 #linkedin{
   height: 20px;
   width: 80px;
 }
 .about{
-  border: rgb(10, 9, 111) 1px solid;
+  font-size: 10pt;
+  border: rgb(9,132,227) 1px solid;
   width: 50%;
   padding: 10px;
 }

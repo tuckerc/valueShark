@@ -7,6 +7,7 @@ const superagent = require('superagent');
 const request = require('request');
 const uuidv5 = require('uuid/v5');
 const db = require('../db/db.js');
+
 /////////////////////////////////////////////////
 // Constructors
 /////////////////////////////////////////////////
@@ -59,7 +60,7 @@ function loginHandler(req, res) {
       if(result.rowCount) {
         // pull portfolio
         // res.render('index');
-        res.redirect('/')
+        res.redirect('/home')
         res.redirect('/home?userID=' + user.id);
       }
       else {
@@ -289,18 +290,6 @@ function searchRender(req,res) {
 
   results.symbol = searchSymbol(req.body.symbolField);
 }
-////////////////////////////////////////////////
-//////DETAIL-VIEW
-/////////////////////////////////////////////////
-function renderDetails(req, res) {
-  db.renderDetails(req.body.ticker)
-  .then(result => {
-    console.log(result);
-    // ourDetail.
-  }
-  )
-res.render('pages/detail-view')
-  }
 
 ////////////////////////////////////////////////////////////////////////
 // function for adding a company to a portfolio
@@ -327,7 +316,7 @@ function deletePortfolio(req, res) {
 // function for getting table
 ////////////////////////////////////////////////////////
 function getTable(req, res) {
-  // console.log(req); 
+  // console.log(req);
   db.getTable(req,res)
   .then(result =>{
     // console.log(result);
@@ -387,4 +376,3 @@ exports.renderPortfolioUpdate = renderPortfolioUpdate;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
 exports.renderLogin = renderLogin;
-exports.renderDetails = renderDetails;

@@ -66,8 +66,6 @@
 }
 
 
-
-
 .aside {
   height: 600PX;
   display: flex;
@@ -180,7 +178,7 @@ hr {
 }
 #addButton:hover {
   background-color: rgba(116, 185, 255,1.0);
-
+}
 table {
   font-family: 'Roboto Condensed', sans-serif;
   border-collapse: collapse;
@@ -192,11 +190,10 @@ td, th {
   text-align: left;
   padding: 8px;
 }
-th {
-  font-family: 'Roboto', sans-serif;
-}
 
 tr:nth-child(1) {
-  background-color:rgb(84,83,155);
+  font-family: 'Michroma', sans-serif;
+  font-size: 10pt;
+  background-color:rgb(9,132,227, .5);
   color: white;
 }
