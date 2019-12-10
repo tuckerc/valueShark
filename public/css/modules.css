@@ -77,10 +77,10 @@
 }
 .about  {
   padding: 25px;
-  width: 700px;
+  width: 600px;
   height: 400px;
   float: left;
-  margin: 20px;
+  margin: 10px;
   background-color: white;
   border:rgba(116, 185, 255,1.0) 2px solid;
   font-size: 8pt;

@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS  portfolios;
 -- );
 
 CREATE TABLE portfolios (
-  id varchar(255) primary key,
+  id varchar(255),
   shares FLOAT,
   av_cost FLOAT,
   ticker varchar(255)

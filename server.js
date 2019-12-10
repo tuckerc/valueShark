@@ -57,6 +57,6 @@ schedule.scheduleJob('* * 0 1 * *', handlers.updateCompanyData);
 
 schedule.scheduleJob('* * 0 * * *', handlers.updateCoFinData);
 
-// handlers.updateCompanyData();
+handlers.updateCompanyData();
 
 // handlers.updateCoFinData();

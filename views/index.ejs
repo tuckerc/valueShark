@@ -1,13 +1,16 @@
 <%- include('partials/head'); -%>
-<%- include('partials/header'); -%>
-
-<div class="main">
-  <div id="searchBar-div">
+<body>
+  <header>
+    <%- include('partials/header'); -%>
+  </header>
+  <main>
     <%- include('partials/searchbar'); -%>
-  </div>
+    <%- include('partials/portfolio'); -%>
+    <%- include('partials/table'); -%>
+  </main>
+  <footer>
+    <%- include('partials/footer'); -%>
+  </footer>
+</body>
+  
 
-  <%- include('partials/table'); -%>
-</div>
-  <%- include('partials/portfolio'); -%>
-
-<%- include('partials/footer'); -%>

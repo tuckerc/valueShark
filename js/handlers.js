@@ -76,6 +76,9 @@ function loginHandler(req, res) {
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
 async function updateCompanyData() {
+  let dbDelete = await db.deleteCompanies();
+  dbDelete;
+  
   let returnArr = [];
 
   let firstQuery = new Promise((resolve, reject) => {
@@ -91,12 +94,15 @@ async function updateCompanyData() {
     };
 
     request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      let parsedBody = JSON.parse(body);
-      console.log(body);
-      parsedBody.results.forEach(company => {
-        returnArr.push(new Company(company));
-      });
+      try {
+        let parsedBody = JSON.parse(body);
+        parsedBody.results.forEach(company => {
+          returnArr.push(new Company(company));
+        });
+      }
+      catch(err) {
+        console.log(err);
+      }
       resolve('first query success');
       reject('Error in first Query');
     })
@@ -120,18 +126,22 @@ async function updateCompanyData() {
       };
       
       setTimeout(request, 1000 * idx, options, (error, response, body) => {
-        if (error) throw new Error(error);
-        // const textBody = JSON.stringify(body);
-        const bodyCheck = body.substring(0, 9);
-        if (bodyCheck === '{"result"') {
+        try {
+          const bodyCheck = body.substring(0, 9);
           let parsedBody = JSON.parse(body);
           if(parsedBody.result) {
             company.description = parsedBody.result.businessDescription.value;
             company.industry = parsedBody.result.industry.value;
             company.url = parsedBody.result.contact.url;
           }
+          else console.log(parsedBody);
+          console.log(idx);
+          console.log(company);
+          db.addCompany(company);
         }
-        db.addCompany(company);
+        catch(err) {
+          console.log(err);
+        }        
       });
     });
     resolve('good second query');
@@ -185,22 +195,27 @@ async function updateCoFinData() {
     };
     
     setTimeout(request, 2000 * idx, options, (error, response, body) => {
-      const bodyCheck = body.substring(0,12);
-      if(bodyCheck === '{"quoteType"') {
-        let parsedBody = JSON.parse(body);
-        if(parsedBody.quoteType) {
+      try {
+        const bodyCheck = body.substring(0,12);
+        if(bodyCheck === '{"quoteType"') {
           let parsedBody = JSON.parse(body);
-          const newSymbol = new Symbol(parsedBody);
-          company.price = newSymbol.price;
-          company.pe = newSymbol.pe;
-          company.peg = newSymbol.peg;
-          company.beta = newSymbol.beta;
-          company.pb = newSymbol.pb;
-          company.profitMargin = newSymbol.profitMargin;
-          company.marketCap = newSymbol.marketCap;
-          console.log(company);
-          db.updateCompanyData(company);
+          if(parsedBody.quoteType) {
+            let parsedBody = JSON.parse(body);
+            const newSymbol = new Symbol(parsedBody);
+            company.price = newSymbol.price;
+            company.pe = newSymbol.pe;
+            company.peg = newSymbol.peg;
+            company.beta = newSymbol.beta;
+            company.pb = newSymbol.pb;
+            company.profitMargin = newSymbol.profitMargin;
+            company.marketCap = newSymbol.marketCap;
+            console.log(company);
+            db.updateCompanyData(company);
+          }
         }
+      }
+      catch(err) {
+        console.log(err);
       }
     })
   });

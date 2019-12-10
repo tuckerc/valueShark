@@ -13,6 +13,16 @@ const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => handlers.errorHandler((err)));
 
+///////////////////////////////////////////////////
+// Function for clearing all company data
+///////////////////////////////////////////////////
+function deleteCompanies() {
+  let sql = 'delete from companies';
+  client.query(sql);
+  sql = 'delete from company_data';
+  client.query(sql);
+}
+
 //////////////////////////////////////////////////
 // Function to add a company
 //////////////////////////////////////////////////
@@ -125,3 +135,4 @@ exports.updatePortfolio = updatePortfolio;
 exports.deletePortfolio = deletePortfolio;
 exports.getTable = getTable;
 exports.getPortfolio = getPortfolio;
+exports.deleteCompanies = deleteCompanies;
