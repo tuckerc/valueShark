@@ -28,7 +28,6 @@ function Symbol(data) {
 }
 
 function Company(data) {
-  if (data.id) this.id = data.id;
   if(data.companyName) this.name = data.companyName;
   else if(data.name) this.name = data.name;
   this.ticker = data.ticker;
@@ -76,12 +75,25 @@ function loginHandler(req, res) {
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
 async function updateCompanyData() {
-  let dbDelete = await db.deleteCompanies();
-  dbDelete;
-  
-  let returnArr = [];
+  try {
+    db.deleteCompanies();
+    let returnArr = [];
+    const coList = await _getCoList(returnArr);
+    coList;
+    const coInfo = await _getCoInfo(returnArr);
+    coInfo;
+    console.log(`companies table updated: ${Math.floor(Date.now() / 1000)}`);
+  }
+  catch(err) {
+    console.log(err);
+  }
+}
 
-  let firstQuery = new Promise((resolve, reject) => {
+////////////////////////////////////////////////////
+// helper to get company list
+////////////////////////////////////////////////////
+function _getCoList(arr) {
+  return new Promise((resolve, reject) => {
     const options = {
       method: 'GET',
       url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
@@ -97,70 +109,51 @@ async function updateCompanyData() {
       try {
         let parsedBody = JSON.parse(body);
         parsedBody.results.forEach(company => {
-          returnArr.push(new Company(company));
+          arr.push(new Company(company));
         });
+        resolve(arr);
       }
       catch(err) {
         console.log(err);
+        reject(err);
       }
-      resolve('first query success');
-      reject('Error in first Query');
-    })
+    });
   });
+}
 
-  const firstResult = await firstQuery;
-
-  firstResult;
-
-  let secondQuery = new Promise((resolve, reject) => {
-    returnArr.forEach((company, idx) => {
+//////////////////////////////////////////////////
+// helper to get company info
+//////////////////////////////////////////////////
+function _getCoInfo(arr) {
+  return new Promise((resolve, reject) => {
+    arr.forEach((company, idx) => {
       const options = {
         method: 'GET',
-        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-        qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
+        url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/company`,
+        qs: { token: `${process.env.IEX_PUBLIC}` },
         headers: {
-          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-          'x-rapidapi-key': process.env.RAPID_API_KEY,
-          accept: 'string'
+          sk: `${process.env.IEX_SECRET}`
         }
       };
       
-      setTimeout(request, 1000 * idx, options, (error, response, body) => {
+      setTimeout(request, 250 * idx, options, (error, response, body) => {
         try {
-          const bodyCheck = body.substring(0, 9);
           let parsedBody = JSON.parse(body);
-          if(parsedBody.result) {
-            company.description = parsedBody.result.businessDescription.value;
-            company.industry = parsedBody.result.industry.value;
-            company.url = parsedBody.result.contact.url;
-          }
-          else console.log(parsedBody);
+          company.description = parsedBody.description;
+          company.industry = parsedBody.industry;
+          company.url = parsedBody.website;
           console.log(idx);
           console.log(company);
           db.addCompany(company);
         }
         catch(err) {
           console.log(err);
+          reject(err);
         }        
       });
     });
-    resolve('good second query');
-    reject('bad second query');
+    resolve(arr);
   });
-
-  let secondResult = await secondQuery;
-
-  secondResult;
-
-  let success = new Promise((resolve, reject) => {
-    console.log(`companies table updated: ${Math.floor(Date.now() / 1000)}`);
-    resolve('success');
-    reject('failure');
-  });
-
-  let lastResult = await success;
-
-  lastResult;
 }
 
 //////////////////////////////////////////////////
@@ -169,63 +162,115 @@ async function updateCompanyData() {
 //////////////////////////////////////////////////
 async function updateCoFinData() {
   let tempArr = [];
-  let getTickers = db.getCompanies()
-    .then(result => {
-      result.rows.forEach(company => {
-        tempArr.push(new Company(company));
-      })
-    })
-    .catch(err => console.log(err));
-
-  let tickersResults = await getTickers;
-
-  tickersResults;
-
   
-  
-  let getData = tempArr.forEach((company, idx) => {
-    const options = {
-      method: 'GET',
-      url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics',
-      qs: {region: 'US', symbol: company.ticker},
-      headers: {
-        'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
-      }
-    };
-    
-    setTimeout(request, 2000 * idx, options, (error, response, body) => {
-      try {
-        const bodyCheck = body.substring(0,12);
-        if(bodyCheck === '{"quoteType"') {
-          let parsedBody = JSON.parse(body);
-          if(parsedBody.quoteType) {
-            let parsedBody = JSON.parse(body);
-            const newSymbol = new Symbol(parsedBody);
-            company.price = newSymbol.price;
-            company.pe = newSymbol.pe;
-            company.peg = newSymbol.peg;
-            company.beta = newSymbol.beta;
-            company.pb = newSymbol.pb;
-            company.profitMargin = newSymbol.profitMargin;
-            company.marketCap = newSymbol.marketCap;
-            console.log(company);
-            db.updateCompanyData(company);
-          }
-        }
-      }
-      catch(err) {
-        console.log(err);
-      }
-    })
-  });
-
-  let getDataResults = await getData;
-  
-  getDataResults;
-
-  // console.log(tempArr);
+  const tickers = await _getTickers(tempArr);
+  tickers;
+  const data = await _getCoData(tempArr);
+  data;
 }
+
+/////////////////////////////////////////////////
+// helper to get ticker symbols
+////////////////////////////////////////////////
+function _getTickers(arr) {
+  return new Promise((resolve, reject) => {
+    try {
+      db.getCompanies()
+        .then(result => {
+          result.rows.forEach(company => {
+            arr.push(new Company(company));
+          });
+          resolve(arr);
+        })
+        .catch(err => console.log(err));
+    }
+    catch(err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+}
+
+/////////////////////////////////////////////////
+// Helper function for updating company price
+/////////////////////////////////////////////////
+function _getCoData(arr) {
+  return new Promise((resolve, reject) => {
+    try {
+      arr.forEach((company, idx) => {
+        let options = {
+          method: 'GET',
+          url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/quote/latestPrice`,
+          qs: { token: `${process.env.IEX_PUBLIC}` },
+          headers: {
+            sk: `${process.env.IEX_SECRET}`
+          }
+        };
+        
+        setTimeout(request, 25 * idx, options, (error, response, body) => {
+          try {
+            let parsedBody = JSON.parse(body);
+            company.price = parsedBody;
+            console.log(company);
+          }
+          catch(err) {
+            console.log(err);
+          }
+        });
+    
+        options = {
+          method: 'GET',
+          url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/advanced-stats`,
+          qs: { token: `${process.env.IEX_PUBLIC}` },
+          headers: {
+            sk: `${process.env.IEX_SECRET}`
+          }
+        };
+        
+        setTimeout(request, 25 * idx, options, (error, response, body) => {
+          try {
+            let parsedBody = JSON.parse(body);
+            company.pe = parsedBody.peRatio;
+            company.peg = parsedBody.pegRatio;
+            company.beta = parsedBody.beta;
+            company.pb = parsedBody.priceToBook;
+            company.profitMargin = parsedBody.profitMargin;
+            company.marketCap = parsedBody.marketcap;
+            console.log(company);
+          }
+          catch(err) {
+            console.log(err);
+          }
+        });
+        setTimeout(db.updateCompanyData, 100 * idx, company);
+      });
+      resolve(arr);
+    }
+    catch(err) {
+      console.log(err);
+      reject(err);
+    };
+  });
+}
+
+/////////////////////////////////////////////////
+// helper for updating company data in db
+/////////////////////////////////////////////////
+// async function _coDataUpdate(arr) {
+//   return new Promise((resolve, reject) => {
+//     try {
+//       arr.forEach((company, idx) => {
+//         console.log(company);
+        
+//       });
+//       resolve(arr);
+//     }
+//     catch(err) {
+//       console.log(err);
+//       reject(err);
+//     }
+//   });
+// }
 
 /////////////////////////////////////////////////
 // function to render login screen
