@@ -4,17 +4,20 @@
 
 <aside id="portfolio-bar">
   <h1>My Portfolio</h1>
+  <div id='portfolio-results'>
   <% portfolio.forEach(result => { %>
-    <h3><%= result.companyName %></h3>
-    <p><%= result.ticker %></p>
-    <p><span class="porfolio-data">Price:</span> <%= result.price %></p>
-    <p><span class="porfolio-data">Average Cost:</span> <%= result.av_cost %></p>
-    <p><span class="porfolio-data">Shares Owned:</span> <%= result.shares %></p>
-    <div id="btn-group">
-        <a class="portfolio-btn" href="/updatePortfolio">Update</a>
-        <a class='portfolio-btn' href='/deletePortfolio'>Delete</a>
+    <div class='portfolio-item'>
+      <h3><%= result.companyName %></h3>
+      <p class='item-ticker'>Symbol:<%= result.ticker %></p>
+      <p class='item-price'>Price: <%= result.price %></p>
+      <p class='item-cost'>Average Cost: <%= result.av_cost %></p>
+      <p class='item-shares'>Shares Owned: <%= result.shares %></p>
+      <div class="btn-group">
+          <a class="portfolio-btn" href="/updatePortfolio">Update</a>
+          <a class='portfolio-btn' href='/deletePortfolio'>Delete</a>
+      </div>  
     </div>
-    
   <% }) %>
+  </div>
 </aside>
 

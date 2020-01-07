@@ -35,10 +35,10 @@ function addCompany(data) {
 ////////////////////////////////////////////////
 ////ADD USERS
 ///////////////////////////////////////////////
-async function addUser(user) {
+function addUser(name) {
   // add new user
-  let sql = 'INSERT INTO users (name, id) VALUES ($1, $2) returning *';
-  let values = [user.name, user.id];
+  let sql = 'INSERT INTO users (name) VALUES ($1) returning *';
+  let values = [name];
   
   return client.query(sql,values);
 }
@@ -46,9 +46,9 @@ async function addUser(user) {
 ////////////////////////////////////////////////
 // Auth User
 ////////////////////////////////////////////////
-function authUser(user) {
-  const sql = 'select * from users where id = $1 and name = $2';
-  const values = [user.id, user.name];
+function authUser(name) {
+  const sql = 'select * from users where name = $1';
+  const values = [name];
   return client.query(sql, values);
 }
 
@@ -66,14 +66,14 @@ function getCompanies() {
 async function updateCompanyData(company) {
   console.log(company);
   
-  let sql = 'delete from company_data using companies where company_data.company_id = companies.id and companies.ticker = $1';
-  let values = [company.ticker];
+  let sql = 'delete from company_data where company_id = $1';
+  let values = [company.id];
   const deleteQuery = client.query(sql, values);
   const deleteResult = await deleteQuery;
   deleteResult;
   
-  sql = 'insert into company_data (price, pe, pb, peg, profit_margin, market_cap) values ($1, $2, $3, $4, $5, $6) returning *';
-  values = [company.price, company.pe, company.pb, company.peg, company.profitMargin, company.marketCap];
+  sql = 'insert into company_data (company_id, price, pe, pb, peg, profit_margin, market_cap) values ($1, $2, $3, $4, $5, $6, $7) returning *';
+  values = [company.id, company.price, company.pe, company.pb, company.peg, company.profitMargin, company.marketCap];
   const updateQuery = client.query(sql, values);
   const updateResult = await updateQuery;
   return updateResult;
@@ -92,7 +92,7 @@ function addNewStock(userID, ticker) {
 // Function to get data for Data Table
 //////////////////////////////////////////////////
 function getTable(req, res) {
-  let SQL = "select * from companies inner join company_data on companies.id = company_data.company_id where company_data.peg > 0 and cast(rtrim(company_data.profit_margin, ' % ') as float) > 15 order by company_data.peg limit 15";
+  let SQL = "select companies.name, companies.ticker, company_data.price, company_data.pe, company_data.peg, round(cast((company_data.profit_margin * 100) as numeric)) as profit_margin, round(cast(company_data.pb as numeric), 2) as pb, trim(trailing '000000' from cast(round(cast(company_data.market_cap as numeric), -6) as text)) as market_cap from companies inner join company_data on companies.id = company_data.company_id where company_data.peg > 0 and company_data.profit_margin > 0.15 and company_data.pb < 2 and company_data.pb > 0 and company_data.pe > 0 order by company_data.peg limit 25";
   return client.query(SQL);
     
 }
