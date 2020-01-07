@@ -1,27 +1,24 @@
- <main id="table">
-<table>
+<table id='index-table'>
   <tr>
     <th>Name</th>
-    <th>Ticker</th>
-    <th>Price</th>
-    <th>P/E</th>
-    <th>PEG</th>
-    <th>Profit Margin</th>
-    <th>PB</th>
-    <th>Market Cap</th>
+    <th class='table-center'>Ticker</th>
+    <th class='table-right'>Price</th>
+    <th class='table-right'>P/E</th>
+    <th class='table-right'>PEG</th>
+    <th class='table-right'>Profit Margin</th>
+    <th class='table-right'>PB</th>
+    <th class='table-right'>Market Cap (in Millions)</th>
   </tr>
-  
   <% table.forEach(stock => { %>
     <tr>
-    <td> <%= stock.name %></td>
-    <td> <%= stock.ticker %></td>
-    <td> <%= stock.price %></td>
-    <td> <%= stock.pe %></td>
-    <td> <%= stock.peg %></td>
-    <td> <%= stock.profit_margin %></td>
-    <td> <%= stock.pb %></td>
-    <td> <%= stock.market_cap %></td>
-    <% }); %>
-    </tr> 
+      <td> <%= stock.name %></td>
+      <td class='table-center'> <%= stock.ticker %></td>
+      <td class='table-right'> <%= stock.price %></td>
+      <td class='table-right'> <%= stock.pe %></td>
+      <td class='table-right'> <%= stock.peg %></td>
+      <td class='table-right'> <%= stock.profit_margin %></td>
+      <td class='table-right'> <%= stock.pb %></td>
+      <td class='table-right'> <%= stock.market_cap %></td>
+    </tr>
+  <% }); %> 
 </table>
-</main>

@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const handlers = require('./js/handlers.js');
+const login = require('./js/login.js');
 // const pg = require('pg')
 
 ////////////////////////////////////////////////
@@ -30,11 +31,9 @@ app.set('view engine', 'ejs');
 app.use(express.static('./public'));
 
 // route for Home-Page
-app.get('/', handlers.renderLogin);
-app.post('/', handlers.loginHandler);
+app.get('/', login.renderLogin);
+app.post('/', login.loginHandler);
 app.get('/home', handlers.indexRender);
-app.get('/home',handlers.getTable);
-app.post('/home', handlers.getTable);
 app.post('/search', handlers.searchRender);
 app.get('/about', handlers.information);
 app.post('/addPortfolio', handlers.addPortfolio);
@@ -59,4 +58,4 @@ schedule.scheduleJob('* * 0 * * *', handlers.updateCoFinData);
 
 // handlers.updateCompanyData();
 
-// handlers.updateCoFinData();
+handlers.updateCoFinData();

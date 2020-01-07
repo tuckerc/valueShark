@@ -7,28 +7,23 @@ const superagent = require('superagent');
 const request = require('request');
 const uuidv5 = require('uuid/v5');
 const db = require('../db/db.js');
+
 /////////////////////////////////////////////////
 // Constructors
 /////////////////////////////////////////////////
 function Symbol(data) {
   this.symbol = data.symbol;
-  if(data.financialData.currentPrice)
-    this.price = data.financialData.currentPrice.fmt;
-  if(data.summaryDetail.trailingPE) 
-    this.pe = data.summaryDetail.trailingPE.fmt;
-  if(data.defaultKeyStatistics.priceToBook) 
-    this.pb = data.defaultKeyStatistics.priceToBook.fmt;
-  if(data.defaultKeyStatistics.pegRatio)
-    this.peg = data.defaultKeyStatistics.pegRatio.fmt;
-  if(data.financialData.profitMargins) 
-    this.profitMargin = data.financialData.profitMargins.fmt;
-  this.name = data.quoteType.shortName;
-  if(data.price.marketCap)
-    this.marketCap = data.price.marketCap.fmt;
+  this.name = data.companyName;
+  this.price = 0;
+  this.pe = 0;
+  this.pb = 0;
+  this.peg = 0;
+  this.profitMargin = 0;
+  this.marketCap = 0;
 }
 
 function Company(data) {
-  if (data.id) this.id = data.id;
+  this.id = data.id;
   if(data.companyName) this.name = data.companyName;
   else if(data.name) this.name = data.name;
   this.ticker = data.ticker;
@@ -37,48 +32,29 @@ function Company(data) {
   if (data.url) this.url = data.url;
 }
 
-function User(name, id) {
-  this.name = name;
-  this.id = id;
-}
-
-
-
-//////////////////////////////////////////////////////////
-// function to handle user login
-//////////////////////////////////////////////////////////
-function loginHandler(req, res) {
-  const userName = req.body.name.toLowerCase();
-  const namespace = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-  const userID = uuidv5(userName, namespace);
-
-  const user = new User(userName.toLowerCase(), userID);
-
-  db.authUser(user)
-    .then(result => {
-      if(result.rowCount) {
-        // pull portfolio
-        // res.render('index');
-        res.redirect('/home?userID=' + user.id);
-      }
-      else {
-        // create a user
-        db.addUser(user)
-          .then(result => {
-            res.redirect('/home?userID=' + user.id);
-          })
-      }
-    })
-    .catch(err => errorHandler(err, req, res));
-}
-
 //////////////////////////////////////////////////////////
 // function to load data for entire NASDAQ
 //////////////////////////////////////////////////////////
 async function updateCompanyData() {
-  let returnArr = [];
+  try {
+    db.deleteCompanies();
+    let returnArr = [];
+    const coList = await _getCoList(returnArr);
+    coList;
+    const coInfo = await _getCoInfo(returnArr);
+    coInfo;
+    console.log(`companies table updated: ${Math.floor(Date.now() / 1000)}`);
+  }
+  catch(err) {
+    console.log(err);
+  }
+}
 
-  let firstQuery = new Promise((resolve, reject) => {
+////////////////////////////////////////////////////
+// helper to get company list
+////////////////////////////////////////////////////
+function _getCoList(arr) {
+  return new Promise((resolve, reject) => {
     const options = {
       method: 'GET',
       url: 'https://morningstar1.p.rapidapi.com/companies/list-by-exchange',
@@ -91,66 +67,54 @@ async function updateCompanyData() {
     };
 
     request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      let parsedBody = JSON.parse(body);
-      console.log(body);
-      parsedBody.results.forEach(company => {
-        returnArr.push(new Company(company));
-      });
-      resolve('first query success');
-      reject('Error in first Query');
-    })
+      try {
+        let parsedBody = JSON.parse(body);
+        parsedBody.results.forEach(company => {
+          arr.push(new Company(company));
+        });
+        resolve(arr);
+      }
+      catch(err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   });
+}
 
-  const firstResult = await firstQuery;
-
-  firstResult;
-
-  let secondQuery = new Promise((resolve, reject) => {
-    returnArr.forEach((company, idx) => {
+//////////////////////////////////////////////////
+// helper to get company info
+//////////////////////////////////////////////////
+function _getCoInfo(arr) {
+  return new Promise((resolve, reject) => {
+    arr.forEach((company, idx) => {
       const options = {
         method: 'GET',
-        url: 'https://morningstar1.p.rapidapi.com/companies/get-company-profile',
-        qs: { Ticker: `${company.ticker}`, Mic: 'XNAS' },
+        url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/company`,
+        qs: { token: `${process.env.IEX_PUBLIC}` },
         headers: {
-          'x-rapidapi-host': 'morningstar1.p.rapidapi.com',
-          'x-rapidapi-key': process.env.RAPID_API_KEY,
-          accept: 'string'
+          sk: `${process.env.IEX_SECRET}`
         }
       };
       
-      setTimeout(request, 1000 * idx, options, (error, response, body) => {
-        if (error) throw new Error(error);
-        // const textBody = JSON.stringify(body);
-        const bodyCheck = body.substring(0, 9);
-        if (bodyCheck === '{"result"') {
+      setTimeout(request, 25 * idx, options, (error, response, body) => {
+        try {
           let parsedBody = JSON.parse(body);
-          if(parsedBody.result) {
-            company.description = parsedBody.result.businessDescription.value;
-            company.industry = parsedBody.result.industry.value;
-            company.url = parsedBody.result.contact.url;
-          }
+          company.description = parsedBody.description;
+          company.industry = parsedBody.industry;
+          company.url = parsedBody.website;
+          console.log(idx);
+          console.log(company);
+          db.addCompany(company);
         }
-        db.addCompany(company);
+        catch(err) {
+          console.log(err);
+          reject(err);
+        }        
       });
     });
-    resolve('good second query');
-    reject('bad second query');
+    resolve(arr);
   });
-
-  let secondResult = await secondQuery;
-
-  secondResult;
-
-  let success = new Promise((resolve, reject) => {
-    console.log(`companies table updated: ${Math.floor(Date.now() / 1000)}`);
-    resolve('success');
-    reject('failure');
-  });
-
-  let lastResult = await success;
-
-  lastResult;
 }
 
 //////////////////////////////////////////////////
@@ -159,64 +123,95 @@ async function updateCompanyData() {
 //////////////////////////////////////////////////
 async function updateCoFinData() {
   let tempArr = [];
-  let getTickers = db.getCompanies()
-    .then(result => {
-      result.rows.forEach(company => {
-        tempArr.push(new Company(company));
-      })
-    })
-    .catch(err => console.log(err));
-
-  let tickersResults = await getTickers;
-
-  tickersResults;
-
   
-  
-  let getData = tempArr.forEach((company, idx) => {
-    const options = {
-      method: 'GET',
-      url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics',
-      qs: {region: 'US', symbol: company.ticker},
-      headers: {
-        'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
-        'x-rapidapi-key': '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030'
-      }
-    };
-    
-    setTimeout(request, 2000 * idx, options, (error, response, body) => {
-      const bodyCheck = body.substring(0,12);
-      if(bodyCheck === '{"quoteType"') {
-        let parsedBody = JSON.parse(body);
-        if(parsedBody.quoteType) {
-          let parsedBody = JSON.parse(body);
-          const newSymbol = new Symbol(parsedBody);
-          company.price = newSymbol.price;
-          company.pe = newSymbol.pe;
-          company.peg = newSymbol.peg;
-          company.beta = newSymbol.beta;
-          company.pb = newSymbol.pb;
-          company.profitMargin = newSymbol.profitMargin;
-          company.marketCap = newSymbol.marketCap;
-          console.log(company);
-          db.updateCompanyData(company);
-        }
-      }
-    })
-  });
-
-  let getDataResults = await getData;
-  
-  getDataResults;
-
-  // console.log(tempArr);
+  const tickers = await _getTickers(tempArr);
+  tickers;
+  const data = await _getCoData(tempArr);
+  data;
 }
 
 /////////////////////////////////////////////////
-// function to render login screen
+// helper to get ticker symbols
+////////////////////////////////////////////////
+function _getTickers(arr) {
+  return new Promise((resolve, reject) => {
+    try {
+      db.getCompanies()
+        .then(result => {
+          result.rows.forEach(company => {
+            arr.push(new Company(company));
+          });
+          resolve(arr);
+        })
+        .catch(err => console.log(err));
+    }
+    catch(err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+}
+
 /////////////////////////////////////////////////
-function renderLogin(req, res) {
-  res.render('pages/login');
+// Helper function for updating company price
+/////////////////////////////////////////////////
+function _getCoData(arr) {
+  return new Promise((resolve, reject) => {
+    try {
+      arr.forEach((company, idx) => {
+        let options = {
+          method: 'GET',
+          url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/quote/latestPrice`,
+          qs: { token: `${process.env.IEX_PUBLIC}` },
+          headers: {
+            sk: `${process.env.IEX_SECRET}`
+          }
+        };
+        
+        setTimeout(request, 100 * idx, options, (error, response, body) => {
+          try {
+            let parsedBody = JSON.parse(body);
+            company.price = parsedBody;
+            console.log(company);
+          }
+          catch(err) {
+            console.log(err);
+          }
+        });
+    
+        options = {
+          method: 'GET',
+          url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/advanced-stats`,
+          qs: { token: `${process.env.IEX_PUBLIC}` },
+          headers: {
+            sk: `${process.env.IEX_SECRET}`
+          }
+        };
+        
+        setTimeout(request, 100 * idx, options, (error, response, body) => {
+          try {
+            let parsedBody = JSON.parse(body);
+            company.pe = parsedBody.peRatio;
+            company.peg = parsedBody.pegRatio;
+            company.beta = parsedBody.beta;
+            company.pb = parsedBody.priceToBook;
+            company.profitMargin = parsedBody.profitMargin;
+            company.marketCap = parsedBody.marketcap;
+            console.log(company);
+          }
+          catch(err) {
+            console.log(err);
+          }
+        });
+        setTimeout(db.updateCompanyData, 250 * idx, company);
+      });
+      resolve(arr);
+    }
+    catch(err) {
+      console.log(err);
+      reject(err);
+    };
+  });
 }
 
 //////////////////////////////////////////////////
@@ -259,6 +254,7 @@ async function indexRender(req,res) {
   result;
   results.portfolio = result.portfolio;
   results.table = result.table;
+  results.userID = req.query.userID;
 
   // console.log(results);
 
@@ -278,16 +274,41 @@ function renderPortfolioUpdate(req, res) {
 async function searchSymbol(ticker) {
   let symbol = {};
 
-  const tickerQuery = await superagent.get(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-statistics?region=US&symbol=${ticker}`)
-    .set('x-rapidapi-host', 'apidojo-yahoo-finance-v1.p.rapidapi.com')
-    .set('x-rapidapi-key', '59c3cee36bmsh6b1f9569817f053p1fe347jsn97c3c9a08030')
-    .then( result => {
-      symbol = new Symbol(result.body);
-    })
-    .catch(err => errorHandler(err));
+  let options = {
+    method: 'GET',
+    url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/company`,
+    qs: { token: `${process.env.IEX_PUBLIC}` },
+    headers: {
+      sk: `${process.env.IEX_SECRET}`
+    }
+  };
 
-  const tickerResult = tickerQuery;
-  tickerResult;
+  const companyReq = await request(options, (error, response, body) => {
+    try {
+      const parsedBody = JSON.parse(body);
+      symbol = new Symbol(parsedBody);
+    }
+    catch(err) {
+      console.log(err);
+    }
+  });
+
+  const companyResult = companyReq;
+  companyResult;
+
+  options = {
+    method: 'GET',
+    url: `https://sandbox.iexapis.com/v1/stock/${company.ticker}/quote/latestPrice`,
+    qs: { token: `${process.env.IEX_PUBLIC}` },
+    headers: {
+      sk: `${process.env.IEX_SECRET}`
+    }
+  };
+
+  const quoteReq = await request(options, (error, response, body) => {
+    const parsedBody = JSON.parse(body);
+    symbol.price = parsedBody;
+  })
 
   return symbol;
 }
